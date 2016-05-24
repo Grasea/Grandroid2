@@ -1,0 +1,1 @@
+include ':app', ':grandroid-ble', ':grandroid-database', ':grandroid-mvp-framework', ':grandroid-core'

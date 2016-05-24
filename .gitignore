@@ -1,0 +1,14 @@
+*.iml
+/local.properties
+/.gradle
+/.idea
+.DS_Store
+/build
+/captures
+# Mongo Explorer plugin:
+# .idea/mongoSettings.xml
+
+## File-based project format:
+*.ipr
+*.iws
+
