@@ -1,8 +1,9 @@
-package com.grasea.ble.annotations;
+package com.grasea.grandroid.ble.annotations;
 
-import com.grasea.ble.Config;
-import com.grasea.ble.GrandroidBle;
-import com.grasea.ble.data.BleDataDivider;
+
+import com.grasea.grandroid.ble.Config;
+import com.grasea.grandroid.ble.GrandroidBle;
+import com.grasea.grandroid.ble.data.BleDataDivider;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

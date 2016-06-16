@@ -1,10 +1,10 @@
-package com.grasea.ble.data;
+package com.grasea.grandroid.ble.data;
 
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.support.annotation.Nullable;
 
-import com.grasea.ble.controller.BaseBleDevice;
+import com.grasea.grandroid.ble.controller.BaseBleDevice;
 
 import java.util.ArrayList;
 import java.util.UUID;

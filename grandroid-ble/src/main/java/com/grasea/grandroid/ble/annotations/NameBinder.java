@@ -1,6 +1,6 @@
-package com.grasea.ble.annotations;
+package com.grasea.grandroid.ble.annotations;
 
-import com.grasea.ble.Config;
+import com.grasea.grandroid.ble.Config;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;

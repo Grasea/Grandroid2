@@ -1,4 +1,4 @@
-package com.grasea.ble.data;
+package com.grasea.grandroid.ble.data;
 
 
 import android.support.annotation.Nullable;

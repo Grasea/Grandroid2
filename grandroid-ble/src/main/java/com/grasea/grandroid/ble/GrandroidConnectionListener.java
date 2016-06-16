@@ -1,8 +1,8 @@
-package com.grasea.ble;
+package com.grasea.grandroid.ble;
 
 import android.support.annotation.Nullable;
 
-import com.grasea.ble.controller.BleDevice;
+import com.grasea.grandroid.ble.controller.BleDevice;
 
 /**
  * Created by Alan Ding on 2016/5/19.

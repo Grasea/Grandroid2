@@ -1,8 +1,8 @@
-package com.grasea.ble;
+package com.grasea.grandroid.ble;
 
 import android.app.Activity;
 
-import com.grasea.ble.annotations.OnBleDataReceive;
+import com.grasea.grandroid.ble.annotations.OnBleDataReceive;
 
 /**
  * Created by Alan Ding on 2016/5/16.

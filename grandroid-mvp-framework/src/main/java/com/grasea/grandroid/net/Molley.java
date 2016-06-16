@@ -8,6 +8,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -97,6 +98,8 @@ public class Molley {
 
     public static final String CONTENT_TYPE_JSON = "application/json";
 
+    private static int timeout = DefaultRetryPolicy.DEFAULT_TIMEOUT_MS;
+
     public static void init(Context context) {
         requestQueue = Volley.newRequestQueue(context);
     }
@@ -120,6 +123,10 @@ public class Molley {
         method = POST;//default use POST
         this.keepingCookie = keepCookie;
         contentType = CONTENT_TYPE_FORM_URLENCODED;
+    }
+
+    public static void setTimeout(int timeout) {
+        Molley.timeout = timeout;
     }
 
     /**
@@ -335,7 +342,7 @@ public class Molley {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    resultHandler.onAPIError(error.getCause());
+                    resultHandler.onAPIError(error);
                 }
             }) {
                 @Override
@@ -355,10 +362,12 @@ public class Molley {
 
                 @Override
                 public String getBodyContentType() {
-                    return contentType+"; charset="+encoding;
+                    return contentType + "; charset=" + encoding;
                 }
             };
-
+            request.setRetryPolicy(new DefaultRetryPolicy(timeout,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 // Adding request to request queue
             requestQueue.add(request);
         } catch (Exception ex) {

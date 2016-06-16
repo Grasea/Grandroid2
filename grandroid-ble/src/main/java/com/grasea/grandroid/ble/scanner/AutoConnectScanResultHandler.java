@@ -1,11 +1,11 @@
-package com.grasea.ble.scanner;
+package com.grasea.grandroid.ble.scanner;
 
 import android.bluetooth.BluetoothDevice;
 import android.os.Build;
 
-import com.grasea.ble.Config;
-import com.grasea.ble.GrandroidBle;
-import com.grasea.ble.controller.BleDevice;
+import com.grasea.grandroid.ble.Config;
+import com.grasea.grandroid.ble.GrandroidBle;
+import com.grasea.grandroid.ble.controller.BleDevice;
 
 /**
  * Created by Alan Ding on 2016/5/19.

@@ -1,8 +1,8 @@
-package com.grasea.ble.data;
+package com.grasea.grandroid.ble.data;
 
 import android.bluetooth.BluetoothGattCharacteristic;
 
-import com.grasea.ble.BluetoothLeService;
+import com.grasea.grandroid.ble.BluetoothLeService;
 
 /**
  * Created by Alan Ding on 2016/5/13.

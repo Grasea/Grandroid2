@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.grasea.ble;
+package com.grasea.grandroid.ble;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
@@ -33,7 +33,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.grasea.ble.controller.BaseBleDevice;
+import com.grasea.grandroid.ble.controller.BaseBleDevice;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -57,15 +57,15 @@ public class BluetoothLeService extends Service {
     public static final int STATE_CONNECTED = 2;
 
     public final static String ACTION_GATT_CONNECTED =
-            "com.grasea.ble.ACTION_GATT_CONNECTED";
+            "com.grasea.grandroid.ble.ACTION_GATT_CONNECTED";
     public final static String ACTION_GATT_DISCONNECTED =
-            "com.grasea.ble.ACTION_GATT_DISCONNECTED";
+            "com.grasea.grandroid.ble.ACTION_GATT_DISCONNECTED";
     public final static String ACTION_GATT_SERVICES_DISCOVERED =
-            "com.grasea.ble.ACTION_GATT_SERVICES_DISCOVERED";
+            "com.grasea.grandroid.ble.ACTION_GATT_SERVICES_DISCOVERED";
     public final static String ACTION_DATA_AVAILABLE =
-            "com.grasea.ble.ACTION_DATA_AVAILABLE";
+            "com.grasea.grandroid.ble.ACTION_DATA_AVAILABLE";
     public final static String EXTRA_DATA =
-            "com.grasea.ble.EXTRA_DATA";
+            "com.grasea.grandroid.ble.EXTRA_DATA";
     public final static String EXTRA_DEVICE_ADDRESS = "address";
     public final static String EXTRA_SERVICE_UUID = "serviceUUID";
     public final static String EXTRA_CHANNEL_UUID = "characteristicUUID";

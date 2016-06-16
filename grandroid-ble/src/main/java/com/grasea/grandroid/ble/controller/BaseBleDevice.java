@@ -1,6 +1,6 @@
-package com.grasea.ble.controller;
+package com.grasea.grandroid.ble.controller;
 
-import com.grasea.ble.data.GattServiceChannelHandler;
+import com.grasea.grandroid.ble.data.GattServiceChannelHandler;
 
 import java.util.ArrayList;
 import java.util.Iterator;

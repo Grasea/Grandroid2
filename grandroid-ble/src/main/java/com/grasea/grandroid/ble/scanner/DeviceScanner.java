@@ -1,4 +1,4 @@
-package com.grasea.ble.scanner;
+package com.grasea.grandroid.ble.scanner;
 
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
@@ -10,8 +10,8 @@ import android.bluetooth.le.ScanSettings;
 import android.os.Build;
 import android.os.ParcelUuid;
 
-import com.grasea.ble.Config;
-import com.grasea.ble.GrandroidBle;
+import com.grasea.grandroid.ble.Config;
+import com.grasea.grandroid.ble.GrandroidBle;
 
 import java.util.ArrayList;
 import java.util.Arrays;

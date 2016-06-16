@@ -1,4 +1,4 @@
-package com.grasea.ble.scanner;
+package com.grasea.grandroid.ble.scanner;
 
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothDevice;

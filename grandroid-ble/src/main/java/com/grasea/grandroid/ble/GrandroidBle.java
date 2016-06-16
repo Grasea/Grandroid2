@@ -1,4 +1,4 @@
-package com.grasea.ble;
+package com.grasea.grandroid.ble;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -14,12 +14,12 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.grasea.ble.annotations.MethodBinder;
-import com.grasea.ble.annotations.NameBinder;
-import com.grasea.ble.controller.BaseBleDevice;
-import com.grasea.ble.controller.BleDevice;
-import com.grasea.ble.data.parser.BleDataParser;
-import com.grasea.ble.scanner.DeviceScanner;
+import com.grasea.grandroid.ble.annotations.MethodBinder;
+import com.grasea.grandroid.ble.annotations.NameBinder;
+import com.grasea.grandroid.ble.controller.BaseBleDevice;
+import com.grasea.grandroid.ble.controller.BleDevice;
+import com.grasea.grandroid.ble.data.parser.BleDataParser;
+import com.grasea.grandroid.ble.scanner.DeviceScanner;
 
 import java.util.ArrayList;
 

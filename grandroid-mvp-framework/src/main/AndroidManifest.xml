@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.grasea.grandroid">
+    package="com.grasea.grandroid.mvpframework">
 
     <application
         android:allowBackup="true"
