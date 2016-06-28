@@ -11,20 +11,21 @@ Grandroid2 is a open source library for Android. More stronger than [Grandroid](
 
  2. **MVP-Framework(使用Annotation技術)**: 利用Annotation技術Presenter及View之間的setup更加快速及簡便.
 
- 3. **Bluetooth LE Library(使用Annotation技術)**: 利用Annotation技術，快速實現BLE Deivce搜尋、裝置連接、監聽資料以及發送資料.
+ 3. **Bluetooth LE Library(使用Annotation技術)**: 利用Annotation技術，快速實現BLE Device搜尋、裝置連接、監聽資料以及發送資料.
 
  4. **ORM Database**: 簡單易用的ORM Database library.
 
 ## 如何使用 Usage
-1. Add Repository in build.gradle:
-
+Step1. Add Repository in build.gradle:
 
 ```
       repositories {
     	        maven { url 'https://dl.bintray.com/ch8154/maven' }
         }
 ```
-2. Add dependency in buidle.gradle what library  you want.
+
+Step2. Add dependency in build.gradle what library you want.
+
 
 ###Core引用了
 1. com.android.support:appcompat-v7:23.3.0
@@ -35,8 +36,7 @@ Grandroid2 is a open source library for Android. More stronger than [Grandroid](
 	    compile 'com.grasea:grandroid-core:1.0.1'
     }
 ```
-###MVP-Framework
-引用了
+###MVP-Framework引用了
 1. com.grasea:grandroid-core:1.0.1
 2. com.android.support:appcompat-v7:23.3.0
 3. com.mcxiaoke.volley:library:1.0.+
@@ -46,8 +46,7 @@ Grandroid2 is a open source library for Android. More stronger than [Grandroid](
 	    compile 'com.grasea:grandroid-mvp-framework:1.0.1-beta6'
     }
 ```
-###Bluetooth LE Library
-引用了
+###Bluetooth LE Library引用了
 1. com.android.support:appcompat-v7:23.3.0
 
 ```
@@ -55,8 +54,7 @@ Grandroid2 is a open source library for Android. More stronger than [Grandroid](
 	    compile 'com.grasea:grandroid-ble:1.0.2'
     }
 ```
-###ORM Database
-引用了
+###ORM Database引用了
 1. com.grasea:grandroid-core:1.0.1
 
 ```
