@@ -61,15 +61,15 @@ public class BLEDemoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                Config.logi("action:" + action);
-            }
-        };
-        registerReceiver(broadcastReceiver, new IntentFilter(BluetoothDevice.ACTION_PAIRING_REQUEST));
-        registerReceiver(broadcastReceiver, new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED));
+//        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                String action = intent.getAction();
+//                Config.logi("action:" + action);
+//            }
+//        };
+//        registerReceiver(broadcastReceiver, new IntentFilter(BluetoothDevice.ACTION_PAIRING_REQUEST));
+//        registerReceiver(broadcastReceiver, new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED));
         ButterKnife.bind(this);
         btnSend.setEnabled(false);
         initRecycler();

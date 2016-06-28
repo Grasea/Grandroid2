@@ -25,7 +25,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.grasea:grandroid-core:1.0.1'
+    compile 'com.grasea:grandroid-core:1.0.2'
 }
 def siteUrl = 'https://github.com/Grasea/Grandroid2'      // 项目的主页
 def gitUrl = 'https://github.com/Grasea/Grandroid2.git'   // Git 仓库的 url

@@ -29,4 +29,6 @@ dependencies {
     compile 'com.android.support:design:23.3.0'
     compile project(':grandroid-ble')
     compile project(path: ':grandroid-database')
+    compile project(':grandroid-mvp-framework')
+
 }

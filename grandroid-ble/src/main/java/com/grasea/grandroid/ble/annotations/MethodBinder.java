@@ -133,12 +133,13 @@ public class MethodBinder implements Parsable, BleDataDivider {
                     MethodManager methodManager = new MethodManager(serviceUUID);
                     if (isSingleChannelUUID) {
                         methodManager.getMethodHashMap().put(channelUUID, method);
-                        Config.logi("Bind success UUID:" + channelUUID + ", Method Name:" + method.getName());
+                        boolean startSuccess = startListenNotificationChannel(serviceUUID, channelUUID);
+                        Config.logi("Bind success UUID:" + channelUUID + ", Method Name:" + method.getName() + ", isSuccess:" + startSuccess);
                     } else {
                         for (String cUUId : channelUUIDs) {
                             methodManager.getMethodHashMap().put(cUUId.toLowerCase(), method);
-                            startListenNotificationChannel(serviceUUID, cUUId);
-                            Config.logi("Bind success UUID:" + cUUId.toLowerCase() + ", Method Name:" + method.getName());
+                            boolean startSuccess = startListenNotificationChannel(serviceUUID, cUUId);
+                            Config.logi("Bind success UUID:" + cUUId.toLowerCase() + ", Method Name:" + method.getName() + ", isSuccess:" + startSuccess);
                         }
                     }
                     dataMethodHashMap.put(serviceUUID, methodManager);
@@ -146,13 +147,13 @@ public class MethodBinder implements Parsable, BleDataDivider {
                 } else {
                     if (isSingleChannelUUID) {
                         dataMethodHashMap.get(serviceUUID).getMethodHashMap().put(channelUUID, method);
-                        startListenNotificationChannel(serviceUUID, channelUUID);
-                        Config.logi("Start Listen UUID:" + channelUUID + ", Method Name:" + method.getName());
+                        boolean startSuccess = startListenNotificationChannel(serviceUUID, channelUUID);
+                        Config.logi("Start Listen UUID:" + channelUUID + ", Method Name:" + method.getName() + ", isSuccess:" + startSuccess);
                     } else {
                         for (String cUUId : channelUUIDs) {
                             dataMethodHashMap.get(serviceUUID).getMethodHashMap().put(cUUId, method);
-                            startListenNotificationChannel(serviceUUID, cUUId);
-                            Config.logi("Bind success UUID:" + channelUUID + ", Method Name:" + method.getName());
+                            boolean startSuccess = startListenNotificationChannel(serviceUUID, cUUId);
+                            Config.logi("Bind success UUID:" + channelUUID + ", Method Name:" + method.getName() + ", isSuccess:" + startSuccess);
                         }
                     }
                 }
@@ -160,12 +161,13 @@ public class MethodBinder implements Parsable, BleDataDivider {
         }
     }
 
-    private void startListenNotificationChannel(String serviceUUID, String channelUUID) {
+    private boolean startListenNotificationChannel(String serviceUUID, String channelUUID) {
         try {
-            GrandroidBle.with(deviceAddress).findService(serviceUUID).getChannel(channelUUID).startListenBleData();
+            return GrandroidBle.with(deviceAddress).findService(serviceUUID).getChannel(channelUUID).startListenBleData();
         } catch (Exception e) {
             Config.loge("Start Listen Notification Channel in Binder has failed" + e.toString());
         }
+        return false;
     }
 
     public static boolean hasParameterType(Method method, Class clazz) {

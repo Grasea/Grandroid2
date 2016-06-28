@@ -25,8 +25,8 @@ Grandroid2 is a open source library for Android. More stronger than [Grandroid](
         }
 ```
 2. Add dependency in buidle.gradle what library  you want.
-###Core
-引用了
+
+###Core引用了
 1. com.android.support:appcompat-v7:23.3.0
 2. com.android.support:recyclerview-v7:23.4.0
 
@@ -43,7 +43,7 @@ Grandroid2 is a open source library for Android. More stronger than [Grandroid](
 
 ```
     dependencies {
-	    compile 'com.grasea:grandroid-mvp-framework:1.0.1-beta1'
+	    compile 'com.grasea:grandroid-mvp-framework:1.0.1-beta6'
     }
 ```
 ###Bluetooth LE Library
@@ -52,7 +52,7 @@ Grandroid2 is a open source library for Android. More stronger than [Grandroid](
 
 ```
     dependencies {
-	    compile 'com.grasea:grandroid-ble:1.0.0'
+	    compile 'com.grasea:grandroid-ble:1.0.2'
     }
 ```
 ###ORM Database

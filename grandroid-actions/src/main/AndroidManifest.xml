@@ -1,8 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.grasea.grandroid.mvpframework">
+    package="com.grasea.grandroid.actions">
 
-    <uses-sdk tools:overrideLibrary="com.grasea.grandroid.actions"></uses-sdk>
     <application
         android:allowBackup="true"
         android:label="@string/app_name"
