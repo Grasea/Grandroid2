@@ -54,6 +54,10 @@ Step2. Add dependency in build.gradle what library you want.
 	    compile 'com.grasea:grandroid-ble:1.0.2'
     }
 ```
+**Add this line to AndroidManifest.**
+```
+ <service android:name="com.grasea.grandroid.ble.BluetoothLeService"></service>
+```
 **Init at Activity or Application onCreate().**
 ```
    GrandroidBle.init(this, new GrandroidConnectionListener() {
