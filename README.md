@@ -87,7 +87,10 @@ Step2. Add dependency in build.gradle what library you want.
 
 **Scan device**
 ```
-   GrandroidBle.getInstance().getDeviceScanner().setRetry(10).filterName("Device Name").setScanResultHandler(new AutoConnectScanResultHandler(60000) {
+   GrandroidBle.getInstance().getDeviceScanner()
+   .setRetry(10)
+   .filterName("Device Name")
+   .setScanResultHandler(new AutoConnectScanResultHandler(60000) {
            @Override
            public void onDeviceFailed(int errorCode) {
                    Config.logi("onDeviceScan Filed:" + errorCode);
