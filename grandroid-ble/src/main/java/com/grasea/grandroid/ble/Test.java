@@ -19,14 +19,14 @@ public class Test extends Activity {
     }
 
     public void onCreate() {
-
+        GrandroidBle.with("");
 //        BluetoothManager systemService = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 //        BluetoothAdapter adapter = systemService.getAdapter();
 //        DeviceScanner deviceScanner = new DeviceScanner(adapter) {
 //            @Override
 //            public void onDeviceFind(BluetoothDevice device, int rssi, byte[] scanRecord) {
 //                super.onDeviceFind(device, rssi, scanRecord);
-                GrandroidBle.with("").connect();
+        GrandroidBle.with("").connect();
 //                if (GrandroidBle.with(device.getAddress()).isConnecting()) {
 //                    GrandroidBle.with(device.getAddress()).findService("SDAFAGASFA00").getChannel("usdiuaskafjkl").startListenBleData();
 //                    //Send

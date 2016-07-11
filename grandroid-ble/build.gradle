@@ -1,7 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
-version = "1.0.2"
+version = "1.1.0"
+def nowVersion = version
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
@@ -13,7 +14,11 @@ android {
         versionName "1.0"
     }
     buildTypes {
+        debug {
+            buildConfigField("String", "GrandroidBleVersion", ('"' + version + '"'));
+        }
         release {
+            buildConfigField("String", "GrandroidBleVersion", ('"' + version + '"'));
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

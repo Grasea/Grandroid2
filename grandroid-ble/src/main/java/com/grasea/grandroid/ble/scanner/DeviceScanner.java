@@ -51,13 +51,19 @@ public class DeviceScanner extends BaseScanner {
     }
 
     public DeviceScanner filterUUID(String uuid) {
-        uuids.add(UUID.fromString(uuid));
+        UUID formatUUID = UUID.fromString(uuid);
+        if (!uuids.contains(formatUUID)) {
+            uuids.add(formatUUID);
+        }
         return this;
     }
 
     public DeviceScanner filterUUIDs(String[] uuids) {
         for (String uuid : uuids) {
-            this.uuids.add(UUID.fromString(uuid));
+            UUID formatUUID = UUID.fromString(uuid);
+            if (!this.uuids.contains(formatUUID)) {
+                this.uuids.add(UUID.fromString(uuid));
+            }
         }
         return this;
     }
@@ -75,13 +81,17 @@ public class DeviceScanner extends BaseScanner {
     }
 
     public DeviceScanner filterName(String name) {
-        names.add(name);
+        if (!names.contains(name)) {
+            names.add(name);
+        }
         return this;
     }
 
     public DeviceScanner filterNames(String[] names) {
         for (String name : names) {
-            this.names.add(name);
+            if (!this.names.contains(name)) {
+                this.names.add(name);
+            }
         }
         return this;
     }

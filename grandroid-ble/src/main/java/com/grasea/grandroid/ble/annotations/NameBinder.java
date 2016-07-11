@@ -45,8 +45,8 @@ public class NameBinder implements Parsable {
         if (!nameMap.isEmpty()) {
             nameMap.clear();
         }
-        Field[] declaredFields = object.getClass().getDeclaredFields();
-        for (Field field : declaredFields) {
+        Field[] fields = object.getClass().getFields();
+        for (Field field : fields) {
             AliasName annotation = field.getAnnotation(AliasName.class);
             if (annotation != null) {
                 String name = annotation.name();

@@ -109,9 +109,13 @@ public class MethodBinder implements Parsable, BleDataDivider {
 //        connectionMethodHashMap.clear();
         //
         clazz = object;
-        Method[] declaredMethods = object.getClass().getDeclaredMethods();
-        for (Method method : declaredMethods) {
-            if (method.isAnnotationPresent(OnBleDataReceive.class)) {
+        Method[] methods = object.getClass().getMethods();
+        Config.logi("Find " + methods.length + " of Methods.");
+        for (Method method : methods) {
+            boolean annotationPresent = method.isAnnotationPresent(OnBleDataReceive.class);
+            Config.logi("method name:" + method.getName() + " is OnBleDataReceive Annotation ? " + annotationPresent);
+
+            if (annotationPresent) {
                 OnBleDataReceive bleDataReceive = method.getAnnotation(OnBleDataReceive.class);
                 String serviceUUID = bleDataReceive.serviceUUID().toLowerCase();
                 String channelUUID = bleDataReceive.characteristicUUID().toLowerCase();
@@ -129,6 +133,7 @@ public class MethodBinder implements Parsable, BleDataDivider {
                 if (!hasParameterType(method, byte[].class)) {
                     throw new Exception("[" + object.getClass().getName() + "] Method " + method.getName() + " need at least one 'byte[]' parameter.");
                 }
+                Config.logd("Is SingleChannelUUID? " + isSingleChannelUUID);
                 if (!dataMethodHashMap.containsKey(serviceUUID)) {
                     MethodManager methodManager = new MethodManager(serviceUUID);
                     if (isSingleChannelUUID) {

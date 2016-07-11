@@ -1,10 +1,5 @@
 package com.grasea.grandroid.demo.ble;
 
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -45,7 +40,7 @@ public class BLEDemoActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        GrandroidBle.detory();
+        GrandroidBle.destroy();
         super.onDestroy();
     }
 

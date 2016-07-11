@@ -29,8 +29,7 @@ public class BleDevice extends BaseBleDevice {
         init();
     }
 
-    @Nullable
-    public GattServiceChannelHandler findService(String serviceUUID) {
+    public @Nullable GattServiceChannelHandler findService(String serviceUUID) {
         return serviceHandlerMap.get(serviceUUID);
     }
 

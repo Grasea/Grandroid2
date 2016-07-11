@@ -18,7 +18,6 @@ import com.grasea.grandroid.ble.annotations.MethodBinder;
 import com.grasea.grandroid.ble.annotations.NameBinder;
 import com.grasea.grandroid.ble.controller.BaseBleDevice;
 import com.grasea.grandroid.ble.controller.BleDevice;
-import com.grasea.grandroid.ble.data.parser.BleDataParser;
 import com.grasea.grandroid.ble.scanner.DeviceScanner;
 
 import java.util.ArrayList;
@@ -60,7 +59,7 @@ public class GrandroidBle {
     }
 
     public static boolean init(Context context, ConnectionListener connectionListener) {
-        Config.loge("startScan to init");
+        Config.loge("startScan to init. Library version :" + BuildConfig.GrandroidBleVersion);
 //        getInstance().context = context;
         getInstance().setConnectionListener(connectionListener);
         initHelper = new InitHelper(context);
@@ -80,10 +79,11 @@ public class GrandroidBle {
         return NameBinder.getInstance().getName(uuid);
     }
 
-    public static void detory() {
+    public static void destroy() {
         getInstance().getDeviceScanner().stopScan();
+        getInstance().clearControllers();
         MethodBinder.unbindAll();
-        initHelper.destory();
+        initHelper.destroy();
         initHelper = null;
     }
 
@@ -128,6 +128,10 @@ public class GrandroidBle {
 
     public ArrayList<BaseBleDevice> getControllers() {
         return bleControllers;
+    }
+
+    public void clearControllers() {
+        bleControllers.clear();
     }
 
     private void setConnectionListener(ConnectionListener connectionListener) {
@@ -182,7 +186,7 @@ public class GrandroidBle {
             return true;
         }
 
-        public void destory() {
+        public void destroy() {
             if (serviceConnection != null && context != null) {
                 context.unbindService(serviceConnection);
             }

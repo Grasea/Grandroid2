@@ -30,14 +30,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
 import com.grasea.grandroid.ble.controller.BaseBleDevice;
+import com.grasea.grandroid.ble.controller.BleController;
+import com.grasea.grandroid.ble.controller.BleDevice;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 /**
@@ -46,10 +51,10 @@ import java.util.UUID;
  */
 public class BluetoothLeService extends Service {
     private final static String TAG = BluetoothLeService.class.getSimpleName();
-
+    private Handler handler = new Handler();
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
-    private HashMap<BaseBleDevice, BluetoothGatt> gattsMap;
+    private HashMap<BaseBleDevice, BluetoothGatt> gattsMap = new HashMap<>();
     private int mConnectionState = STATE_DISCONNECTED;
 
     public static final int STATE_DISCONNECTED = 0;
@@ -87,7 +92,7 @@ public class BluetoothLeService extends Service {
 
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            Config.logd("At Service Connection State Change:" + newState);
+            Config.logi("BluetoothGatt connection State Changed: [" + status + "]" + newState);
             String intentAction;
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 intentAction = ACTION_GATT_CONNECTED;
@@ -101,6 +106,7 @@ public class BluetoothLeService extends Service {
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 intentAction = ACTION_GATT_DISCONNECTED;
                 mConnectionState = STATE_DISCONNECTED;
+                gatt.close();//make 133 not fire.
                 Log.i(TAG, "Disconnected from GATT server.");
                 broadcastUpdate(intentAction, gatt.getDevice().getAddress());
             }
@@ -215,25 +221,22 @@ public class BluetoothLeService extends Service {
      * {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
      * callback.
      */
-    public boolean connect(BaseBleDevice controller) {
+    public boolean connect(final BaseBleDevice controller) {
         if (mBluetoothAdapter == null || controller.getAddress() == null) {
             Log.w(TAG, "BluetoothAdapter not initialized or unspecified address.");
             return false;
         }
         BluetoothGatt bluetoothGatt = findBluetoothGatt(controller);
-
         // Previously connected device.  Try to reconnect.
         if (controller.getAddress() != null && controller.getAddress().equals(controller.getAddress())
                 && bluetoothGatt != null) {
-            Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
-            if (bluetoothGatt.connect()) {
-                mConnectionState = STATE_CONNECTING;
-                return true;
-            } else {
-                return false;
-            }
-        }
+            bluetoothGatt.close();
+            bluetoothGatt.disconnect();
+            removeBluetoothGatt(controller);
+            bluetoothGatt = null;
+            Config.loge("Gatt close and remove first.");
 
+        }
         final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(controller.getAddress());
         if (device == null) {
             Log.w(TAG, "Device not found.  Unable to connect.");
@@ -241,10 +244,26 @@ public class BluetoothLeService extends Service {
         }
         // We want to directly connect to the device, so we are setting the autoConnect
         // parameter to false.
-        bluetoothGatt = device.connectGatt(this, false, mGattCallback);
-        gattsMap.put(controller, bluetoothGatt);
-        Log.d(TAG, "Trying to create a new connection.");
-        mConnectionState = STATE_CONNECTING;
+        Config.loge("sleep 500 ms");
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        BluetoothGatt bluetoothGatt = device.connectGatt(BluetoothLeService.this, false, mGattCallback);
+                        if (bluetoothGatt != null) {
+                            bluetoothGatt.connect();
+                        }
+                        gattsMap.put(controller, bluetoothGatt);
+                        Log.d(TAG, "Trying to create a new connection.");
+                        mConnectionState = STATE_CONNECTING;
+                    }
+                }, 500);
+
+            }
+        });
+
         return true;
     }
 
@@ -260,6 +279,7 @@ public class BluetoothLeService extends Service {
             Log.w(TAG, "BluetoothAdapter not initialized");
             return;
         }
+        bluetoothGatt.close();
         bluetoothGatt.disconnect();
     }
 
@@ -272,12 +292,15 @@ public class BluetoothLeService extends Service {
             bluetoothGatt.close();
         }
         gattsMap.clear();
-        gattsMap = null;
     }
 
     public BluetoothGatt findBluetoothGatt(BaseBleDevice controller) {
         BluetoothGatt bluetoothGatt = gattsMap.get(controller);
         return bluetoothGatt;
+    }
+
+    public void removeBluetoothGatt(BaseBleDevice controller) {
+        gattsMap.remove(controller);
     }
 
     /**
