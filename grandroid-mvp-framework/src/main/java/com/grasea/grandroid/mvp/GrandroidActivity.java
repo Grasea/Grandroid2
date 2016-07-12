@@ -177,6 +177,10 @@ public abstract class GrandroidActivity<P extends GrandroidPresenter> extends Ap
     @Override
     public void onBackPressed() {
         if (onBackPress()) {
+            if (fragmentContainer == -1) {
+                super.onBackPressed();
+                return;
+            }
             int count = getSupportFragmentManager().getBackStackEntryCount();
             if (count == 1) {
                 finish();
