@@ -148,6 +148,6 @@ or
 
 ```
     dependencies {
-	    compile 'com.grasea:grandroid-database:2.0.0'
+	    compile 'com.grasea:grandroid-database:2.0.3@aar'
     }
 ```
