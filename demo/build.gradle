@@ -26,7 +26,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.0.1'
     apt 'com.jakewharton:butterknife-compiler:8.0.1'
     compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.android.support:design:23.3.0'
+    compile 'com.android.support:design:23.2.0'
     compile project(':grandroid-ble')
     compile project(path: ':grandroid-database')
     compile project(':grandroid-mvp-framework')
