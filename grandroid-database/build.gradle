@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
-version = "2.0.0"
+version = "2.0.3"
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
@@ -27,8 +27,8 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.grasea:grandroid-core:1.0.2'
 }
-def siteUrl = 'https://github.com/Grasea/Grandroid2'      // 项目的主页
-def gitUrl = 'https://github.com/Grasea/Grandroid2.git'   // Git 仓库的 url
+def siteUrl = 'https://github.com/Grasea/Grandroid2'      // GitHub主頁
+def gitUrl = 'https://github.com/Grasea/Grandroid2.git'   // Git URL
 
 group = "com.grasea"
 
@@ -36,10 +36,10 @@ install {
     repositories.mavenInstaller {
         // This generates POM.xml with proper parameters
         pom.project {
-            artifactId = "grandroid-database"  // 项目名称
+            artifactId = "grandroid-database"  // Library名稱
             packaging 'aar'
             // Add your description here
-            name 'ORM Database for android.'    // 项目描述
+            name 'ORM Library for android.'    // Library說明
             url 'https://github.com/Grasea/Grandroid2'
             // Set your license
             licenses {
@@ -50,8 +50,8 @@ install {
             }
             developers {
                 developer {
-                    id 'ch8154'        // 填写的一些基本信息
-                    name 'Rovers Yang'
+                    id 'ch8154'        // 填寫基本訊息
+                    name 'Rover Yang'
                     email 'roversyang@gmail.com'
                 }
             }
@@ -81,7 +81,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 artifacts {
-    archives javadocJar
+//    archives javadocJar
     archives sourcesJar
 }
 
@@ -120,7 +120,7 @@ bintray {
     configurations = ['archives']
     pkg {
         repo = "maven"
-        name = "grandroid-database"    // 发布到 JCenter 上的项目名字
+        name = "grandroid-database"    // 發佈到bintray的名稱
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]

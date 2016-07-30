@@ -1,4 +1,4 @@
-package com.grasea.grandroid.sample.database;
+package com.grasea.database;
 
 import android.database.Cursor;
 import android.util.Log;
