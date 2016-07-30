@@ -51,7 +51,7 @@ Step2. Add dependency in build.gradle what library you want.
 
 ```
     dependencies {
-	    compile 'com.grasea:grandroid-ble:1.0.2'
+	    compile 'com.grasea:grandroid-ble:1.1.0'
     }
 ```
 **Add this line to AndroidManifest.**
