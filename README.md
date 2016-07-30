@@ -51,7 +51,7 @@ Step2. Add dependency in build.gradle what library you want.
 
 ```
     dependencies {
-	    compile 'com.grasea:grandroid-ble:1.0.2'
+	    compile 'com.grasea:grandroid-ble:1.1.0'
     }
 ```
 **Add this line to AndroidManifest.**
@@ -144,10 +144,10 @@ or
     
 ```
 ###ORM Database引用了
-1. com.grasea:grandroid-core:1.0.1
+1. com.grasea:grandroid-core:1.0.2
 
 ```
     dependencies {
-	    compile 'com.grasea:grandroid-database:2.0.0'
+	    compile 'com.grasea:grandroid-database:2.0.3@aar'
     }
 ```
