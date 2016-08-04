@@ -3,15 +3,13 @@ package com.grasea.grandroid.mvp.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-
-import com.grasea.grandroid.sample.database.FaceData;
-import com.grasea.grandroid.sample.database.GenericHelper;
-import com.grasea.grandroid.sample.database.Identifiable;
+import com.grasea.database.FaceData;
+import com.grasea.database.GenericHelper;
+import com.grasea.database.Identifiable;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.List;
 
 import graneric.ObjectTypeHandler;
 import graneric.ProxyObject;

@@ -1,1 +1,7 @@
-include ':grandroid-ble', ':grandroid-database', ':grandroid-mvp-framework', ':grandroid-core', ':grandroid-effects', ':demo', ':grandroid-actions'
+include ':grandroid-ble'
+include ':grandroid-database'
+include ':grandroid-mvp-framework'
+include ':grandroid-core'
+include ':grandroid-effects'
+include ':demo'
+include ':grandroid-actions'
