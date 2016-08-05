@@ -44,10 +44,10 @@ public class StartActivity extends AppCompatActivity {
                         break;
                     case R.id.btnQueryPerson:
                         Person p = model.getPerson("where _id=1");
-                        if(p==null) {
+                        if (p == null) {
                             Toast.makeText(getApplicationContext(), "Cannot found person record in database in condition: where id=1", Toast.LENGTH_SHORT).show();
-                        }else{
-                            Toast.makeText(getApplicationContext(), "Found person data in database: "+p.toString(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Found person data in database: " + p.toString(), Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case R.id.btnQueryAllPerson:
@@ -61,6 +61,14 @@ public class StartActivity extends AppCompatActivity {
                         person.setName(model.getName());
                         Toast.makeText(getApplicationContext(), "Save success? " + model.saveUserData(person), Toast.LENGTH_SHORT).show();
                         break;
+                    case R.id.btnGetPersonList:
+                        Toast.makeText(getApplicationContext(), "Person list size = " + model.getPersonList(), Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.btnPutPersonList:
+                        ArrayList<Person> ps = model.getAllPerson();
+                        Person s =model.getPerson("where _id=0");
+                        Toast.makeText(getApplicationContext(), "Save success? " + model.putPersonList(ps), Toast.LENGTH_SHORT).show();
+                        break;
                 }
             }
         };
@@ -73,5 +81,7 @@ public class StartActivity extends AppCompatActivity {
         findViewById(R.id.btnQueryPerson).setOnClickListener(listener);
         findViewById(R.id.btnQueryAllPerson).setOnClickListener(listener);
         findViewById(R.id.btnSavePerson).setOnClickListener(listener);
+        findViewById(R.id.btnPutPersonList).setOnClickListener(listener);
+        findViewById(R.id.btnGetPersonList).setOnClickListener(listener);
     }
 }

@@ -5,7 +5,7 @@ package com.grasea.grandroid.mvp.model;
  */
 public enum DefaultValue {
 
-    FALSE, TRUE, ZERO, ONE, EMPTY_STRING;
+    FALSE, TRUE, ZERO, ONE, EMPTY_STRING, NULL;
 
     public String getStringValue() {
         switch (this) {
@@ -19,6 +19,8 @@ public enum DefaultValue {
                 return "1";
             case EMPTY_STRING:
                 return "";
+            case NULL:
+                return null;
             default:
                 return "";
         }
@@ -36,6 +38,8 @@ public enum DefaultValue {
                 return 1;
             case EMPTY_STRING:
                 return 0;
+            case NULL:
+                return null;
             default:
                 return 0;
         }
@@ -53,6 +57,8 @@ public enum DefaultValue {
                 return 1L;
             case EMPTY_STRING:
                 return 0L;
+            case NULL:
+                return null;
             default:
                 return 0L;
         }
@@ -78,6 +84,8 @@ public enum DefaultValue {
                 return true;
             case EMPTY_STRING:
                 return false;
+            case NULL:
+                return null;
             default:
                 return false;
         }

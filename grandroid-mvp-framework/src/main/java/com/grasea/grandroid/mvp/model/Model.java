@@ -3,7 +3,6 @@ package com.grasea.grandroid.mvp.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-
 import com.grasea.grandroid.sample.database.FaceData;
 import com.grasea.grandroid.sample.database.GenericHelper;
 import com.grasea.grandroid.sample.database.Identifiable;
@@ -11,7 +10,7 @@ import com.grasea.grandroid.sample.database.Identifiable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import graneric.ObjectTypeHandler;
 import graneric.ProxyObject;
@@ -21,6 +20,7 @@ import graneric.ProxyObject;
  */
 public class Model extends ProxyObject {
     private static Context context;
+    private static final ConcurrentHashMap<String, Object> objectMap = new ConcurrentHashMap<>();
 
     static {
         bindAnnotationHandler(Model.class);
@@ -39,82 +39,152 @@ public class Model extends ProxyObject {
 
     @Put()
     protected static boolean put(final Annotation ann, Method m, Object[] args) {
-        final SharedPreferences sp = context.getSharedPreferences("default", Context.MODE_PRIVATE);
         if (args.length > 0) {
-            return new ObjectTypeHandler<Boolean>(args[0]) {
-                @Override
-                protected Boolean onBoolean(Boolean value) {
-                    return sp.edit().putBoolean(((Put) ann).value(), value).commit();
-                }
+            switch (((Put) ann).storage()) {
+                case Memory:
+                    return new ObjectTypeHandler<Boolean>(args[0]) {
+                        @Override
+                        protected Boolean onBoolean(Boolean value) {
+                            objectMap.put(((Put) ann).value(), value);
+                            return true;
+                        }
 
-                @Override
-                protected Boolean onString(String value) {
-                    return sp.edit().putString(((Put) ann).value(), value).commit();
-                }
+                        @Override
+                        protected Boolean onString(String value) {
+                            objectMap.put(((Put) ann).value(), value);
+                            return true;
+                        }
 
-                @Override
-                protected Boolean onInt(Integer value) {
-                    return sp.edit().putInt(((Put) ann).value(), value).commit();
-                }
+                        @Override
+                        protected Boolean onInt(Integer value) {
+                            objectMap.put(((Put) ann).value(), value);
+                            return true;
+                        }
 
-                @Override
-                protected Boolean onDouble(Double value) {
-                    return sp.edit().putFloat(((Put) ann).value(), value.floatValue()).commit();
-                }
+                        @Override
+                        protected Boolean onDouble(Double value) {
+                            objectMap.put(((Put) ann).value(), value);
+                            return true;
+                        }
 
-                @Override
-                protected Boolean onFloat(Float value) {
-                    return sp.edit().putFloat(((Put) ann).value(), value).commit();
-                }
+                        @Override
+                        protected Boolean onFloat(Float value) {
+                            objectMap.put(((Put) ann).value(), value);
+                            return true;
+                        }
 
-                @Override
-                protected Boolean onLong(Long value) {
-                    return sp.edit().putLong(((Put) ann).value(), value).commit();
-                }
+                        @Override
+                        protected Boolean onLong(Long value) {
+                            objectMap.put(((Put) ann).value(), value);
+                            return true;
+                        }
 
-                @Override
-                protected Boolean onObject(Object value) {
-                    return false;
-                }
-            }.process();
+                        @Override
+                        protected Boolean onList(ArrayList list) {
+                            objectMap.put(((Put) ann).value(), value);
+                            return true;
+                        }
+
+                        @Override
+                        protected Boolean onObject(Object value) {
+                            objectMap.put(((Put) ann).value(), value);
+                            return true;
+                        }
+                    }.process();
+                case Preferences:
+                    final SharedPreferences sp = context.getSharedPreferences("default", Context.MODE_PRIVATE);
+                    return new ObjectTypeHandler<Boolean>(args[0]) {
+                        @Override
+                        protected Boolean onBoolean(Boolean value) {
+                            return sp.edit().putBoolean(((Put) ann).value(), value).commit();
+                        }
+
+                        @Override
+                        protected Boolean onString(String value) {
+                            return sp.edit().putString(((Put) ann).value(), value).commit();
+                        }
+
+                        @Override
+                        protected Boolean onInt(Integer value) {
+                            return sp.edit().putInt(((Put) ann).value(), value).commit();
+                        }
+
+                        @Override
+                        protected Boolean onDouble(Double value) {
+                            return sp.edit().putFloat(((Put) ann).value(), value.floatValue()).commit();
+                        }
+
+                        @Override
+                        protected Boolean onFloat(Float value) {
+                            return sp.edit().putFloat(((Put) ann).value(), value).commit();
+                        }
+
+                        @Override
+                        protected Boolean onLong(Long value) {
+                            return sp.edit().putLong(((Put) ann).value(), value).commit();
+                        }
+
+                        @Override
+                        protected Boolean onList(ArrayList list) {
+                            return false;
+                        }
+
+                        @Override
+                        protected Boolean onObject(Object value) {
+                            return false;
+                        }
+                    }.process();
+            }
         }
         return false;
     }
 
     @Get()
     protected static Object get(final Annotation ann, Method m, Object[] args) {
-        final SharedPreferences sp = context.getSharedPreferences("default", Context.MODE_PRIVATE);
-        return new ObjectTypeHandler(m.getReturnType()) {
-            @Override
-            protected Object onBoolean(Boolean value) {
-                return sp.getBoolean(((Get) ann).value(), ((Get) ann).defaultValue().getBooleanValue());
-            }
+        final String key = ((Get) ann).value();
+        switch (((Get) ann).storage()) {
+            case Memory:
+                if (objectMap.containsKey(key)) {
+                    return objectMap.get(key);
+                } else {
+                    return null;
+                }
+            case Preferences:
+                final SharedPreferences sp = context.getSharedPreferences("default", Context.MODE_PRIVATE);
+                return new ObjectTypeHandler(m.getReturnType()) {
+                    @Override
+                    protected Object onBoolean(Boolean value) {
+                        return sp.getBoolean(key, ((Get) ann).defaultValue().getBooleanValue());
+                    }
 
-            @Override
-            protected Object onString(String value) {
-                return sp.getString(((Get) ann).value(), ((Get) ann).defaultValue().getStringValue());
-            }
+                    @Override
+                    protected Object onString(String value) {
+                        return sp.getString(key, ((Get) ann).defaultValue().getStringValue());
+                    }
 
-            @Override
-            protected Object onInt(Integer value) {
-                return sp.getInt(((Get) ann).value(), ((Get) ann).defaultValue().getIntValue());
-            }
+                    @Override
+                    protected Object onInt(Integer value) {
+                        return sp.getInt(key, ((Get) ann).defaultValue().getIntValue());
+                    }
 
-            @Override
-            protected Object onDouble(Double value) {
-                return (double) sp.getFloat(((Get) ann).value(), ((Get) ann).defaultValue().getFloatValue());
-            }
+                    @Override
+                    protected Object onDouble(Double value) {
+                        return (double) sp.getFloat(key, ((Get) ann).defaultValue().getFloatValue());
+                    }
 
-            @Override
-            protected Object onFloat(Float value) {
-                return sp.getFloat(((Get) ann).value(), ((Get) ann).defaultValue().getFloatValue());
-            }
+                    @Override
+                    protected Object onFloat(Float value) {
+                        return sp.getFloat(key, ((Get) ann).defaultValue().getFloatValue());
+                    }
 
-            @Override
-            protected Object onLong(Long value) {
-                return sp.getLong(((Get) ann).value(), ((Get) ann).defaultValue().getLongValue());
-            }
-        }.process();
+                    @Override
+                    protected Object onLong(Long value) {
+                        return sp.getLong(key, ((Get) ann).defaultValue().getLongValue());
+                    }
+                }.process();
+            default:
+                return null;
+        }
     }
 
     @Save()
@@ -168,7 +238,7 @@ public class Model extends ProxyObject {
         final FaceData fd = new FaceData(context, "default");
         final Class objClass = ((Query) ann).value();
         String where = ((Query) ann).where();
-        if (args!=null && args.length > 0) {
+        if (args != null && args.length > 0) {
             if (where.contains("_PARAM_")) {
                 where = where.replaceAll("_PARAM_", args[0].toString());
             } else {
