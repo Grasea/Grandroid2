@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.grasea.grandroid.app.GrandroidApplication;
 import com.grasea.grandroid.mvpframework.R;
@@ -116,16 +117,15 @@ public abstract class GrandroidActivity<P extends GrandroidPresenter> extends Ap
     public void changeFragment(Class<? extends Fragment> fragmentClass, String tag, Bundle args, boolean inHistory, boolean clearTop) {
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
         mIsCanEixt = false;
-        Fragment fragment = fm.findFragmentByTag(tag);
-        if (fragment == null) {
-            try {
-                fragment = fragmentClass.newInstance();
-                fragment.setArguments(new Bundle());
-            } catch (java.lang.InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+//        Fragment fragment = fm.findFragmentByTag(tag);
+        Fragment fragment = null;
+        try {
+            fragment = fragmentClass.newInstance();
+            fragment.setArguments(new Bundle());
+        } catch (java.lang.InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
         if (args != null && !args.isEmpty()) {
             fragment.getArguments().putAll(args);
@@ -171,6 +171,16 @@ public abstract class GrandroidActivity<P extends GrandroidPresenter> extends Ap
     }
 
     public boolean onBackPress() {
+        if (fragmentContainer != -1) {
+            Log.e("grandroid", "onBackPress fragmentContainer has found.");
+            Fragment lastFragment = getLastFragment();
+            if (lastFragment != null && lastFragment instanceof GrandroidFragment) {
+                Boolean result = ((GrandroidFragment) lastFragment).onBackPress();
+                Log.e("grandroid", "onBackPress result:" + result);
+                return result;
+            }
+        }
+        Log.e("grandroid", "onBackPress result true");
         return true;
     }
 
@@ -189,6 +199,7 @@ public abstract class GrandroidActivity<P extends GrandroidPresenter> extends Ap
                 getSupportFragmentManager().popBackStack();
             }
         } else {
+            Log.e("grandroid", "BackPressed returned");
             return;
         }
     }

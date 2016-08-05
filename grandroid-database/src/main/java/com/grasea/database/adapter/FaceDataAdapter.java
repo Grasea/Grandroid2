@@ -2,15 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.grasea.grandroid.sample.database.adapter;
+package com.grasea.database.adapter;
 
 import android.content.Context;
 
 import java.util.ArrayList;
 
 import com.grasea.grandroid.adapter.ObjectAdapter;
-import com.grasea.grandroid.sample.database.GenericHelper;
-import com.grasea.grandroid.sample.database.Identifiable;
+import com.grasea.database.GenericHelper;
+import com.grasea.database.Identifiable;
 
 /**
  *
