@@ -3,9 +3,9 @@ package com.grasea.grandroid.mvp.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.grasea.grandroid.sample.database.FaceData;
-import com.grasea.grandroid.sample.database.GenericHelper;
-import com.grasea.grandroid.sample.database.Identifiable;
+import com.grasea.grandroid.database.FaceData;
+import com.grasea.grandroid.database.GenericHelper;
+import com.grasea.grandroid.database.Identifiable;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -18,22 +18,22 @@ import graneric.ProxyObject;
 /**
  * Created by Rovers on 2016/5/7.
  */
-public class Model extends ProxyObject {
+public class ModelProxy extends ProxyObject {
     private static Context context;
     private static final ConcurrentHashMap<String, Object> objectMap = new ConcurrentHashMap<>();
 
     static {
-        bindAnnotationHandler(Model.class);
+        bindAnnotationHandler(ModelProxy.class);
     }
 
     public static void init(Context context) {
-        Model.context = context;
+        ModelProxy.context = context;
     }
 
-    public Model() {
+    public ModelProxy() {
     }
 
-    public Model(Object entity) {
+    public ModelProxy(Object entity) {
         super(entity);
     }
 

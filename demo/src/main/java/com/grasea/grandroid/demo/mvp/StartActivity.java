@@ -6,12 +6,12 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.grasea.grandroid.demo.R;
-import com.grasea.grandroid.mvp.model.Model;
+import com.grasea.grandroid.mvp.model.ModelProxy;
 
 import java.util.ArrayList;
 
 public class StartActivity extends AppCompatActivity {
-    private DataModel model = Model.reflect(DataModel.class);
+    private DataModel model = ModelProxy.reflect(DataModel.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
