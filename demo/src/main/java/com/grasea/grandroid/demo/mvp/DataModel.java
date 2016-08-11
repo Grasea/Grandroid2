@@ -7,6 +7,7 @@ import com.grasea.grandroid.mvp.model.Get;
 import com.grasea.grandroid.mvp.model.Put;
 import com.grasea.grandroid.mvp.model.Query;
 import com.grasea.grandroid.mvp.model.Save;
+import com.grasea.grandroid.mvp.model.Storage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +38,15 @@ public interface DataModel {
     @Save(Person.class)
     public boolean saveUserData(Person account);
 
-    @Query(Person.class)
+    @Query(value = Person.class)
     public ArrayList<Person> getAllPerson();
 
     @Query(Person.class)
     public Person getPerson(String where);
+
+    @Put(value = "person_list", storage = Storage.Memory)
+    public boolean putPersonList(ArrayList<Person> list);
+
+    @Get(value = "person_list", storage = Storage.Memory, defaultValue = DefaultValue.NULL)
+    public ArrayList<Person> getPersonList();
 }

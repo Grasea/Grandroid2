@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <Button android:id="@+id/btnPutBoolean"
-        android:text="Put boolean data from Preferences"
+        android:text="Put boolean data to Preferences"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <Button android:id="@+id/btnGetInt"
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <Button android:id="@+id/btnPutInt"
-        android:text="Put int data from Preferences"
+        android:text="Put int data to Preferences"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <Button android:id="@+id/btnGetString"
@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <Button android:id="@+id/btnPutString"
-        android:text="Put string data from Preferences"
+        android:text="Put string data to Preferences"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <Button android:id="@+id/btnQueryPerson"
@@ -42,7 +42,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <Button android:id="@+id/btnSavePerson"
-        android:text="Save person data from Preferences"
+        android:text="Save person data to Preferences"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button android:id="@+id/btnGetPersonList"
+        android:text="Get person list from memory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button android:id="@+id/btnPutPersonList"
+        android:text="Put  person list to memory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 </LinearLayout>

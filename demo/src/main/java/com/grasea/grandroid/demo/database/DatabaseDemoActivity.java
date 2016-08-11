@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.grasea.grandroid.demo.R;
-import com.grasea.database.FaceData;
-import com.grasea.database.GenericHelper;
+import com.grasea.grandroid.database.FaceData;
+import com.grasea.grandroid.database.GenericHelper;
 
 import java.util.ArrayList;
 

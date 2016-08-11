@@ -1,7 +1,7 @@
 package com.grasea.grandroid.demo.mvp;
 
-import com.grasea.grandroid.sample.database.Identifiable;
-import com.grasea.grandroid.sample.database.Table;
+import com.grasea.grandroid.database.Identifiable;
+import com.grasea.grandroid.database.Table;
 
 /**
  * Created by Rovers on 2016/7/29.

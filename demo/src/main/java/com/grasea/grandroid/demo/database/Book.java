@@ -16,8 +16,8 @@ package com.grasea.grandroid.demo.database;
  * limitations under the License.
  */
 
-import com.grasea.database.Identifiable;
-import com.grasea.database.Table;
+import com.grasea.grandroid.database.Identifiable;
+import com.grasea.grandroid.database.Table;
 
 /**
  * Created by Alan Ding on 2016/6/16.
