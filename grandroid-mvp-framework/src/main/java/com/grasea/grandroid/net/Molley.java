@@ -21,14 +21,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -70,34 +65,14 @@ public class Molley {
     /**
      *
      */
-    protected int method;
+    protected SendMethod method;
 
-    protected String contentType;
+    protected SendType contentType;
 
     /**
      *
      */
     public boolean isHttps;
-    /**
-     *
-     */
-    public static final int POST = Request.Method.POST;
-    /**
-     *
-     */
-    public static final int GET = Request.Method.GET;
-    /**
-     *
-     */
-    public static final int PUT = Request.Method.PUT;
-    /**
-     *
-     */
-    public static final int DELETE = Request.Method.DELETE;
-
-    public static final String CONTENT_TYPE_FORM_URLENCODED = "application/x-www-form-urlencoded";
-
-    public static final String CONTENT_TYPE_JSON = "application/json";
 
     private static int timeout = DefaultRetryPolicy.DEFAULT_TIMEOUT_MS;
 
@@ -121,9 +96,9 @@ public class Molley {
         this.encoding = "UTF-8";
         param = new HashMap<String, String>();
         headerParams = new HashMap<String, String>();
-        method = POST;//default use POST
+        method = SendMethod.Post;//default use POST
         this.keepingCookie = keepCookie;
-        contentType = CONTENT_TYPE_FORM_URLENCODED;
+        contentType = SendType.FormUrlencoded;
     }
 
     public static void setTimeout(int timeout) {
@@ -230,7 +205,7 @@ public class Molley {
 
     public String getParameters(boolean encode) {
         StringBuilder sb = new StringBuilder();
-        if (contentType.equals(CONTENT_TYPE_JSON)) {
+        if (contentType.equals(SendType.Json)) {
             JSONObject jo = new JSONObject();
             for (String key : param.keySet()) {
                 try {
@@ -255,11 +230,12 @@ public class Molley {
         return sb.toString();
     }
 
-    public void setMethod(int method) {
+    public Molley setMethod(SendMethod method) {
         this.method = method;
+        return this;
     }
 
-    public int getMethod() {
+    public SendMethod getMethod() {
         return method;
     }
 
@@ -272,7 +248,7 @@ public class Molley {
      * @return
      */
     public Molley asPost() {
-        method = POST;
+        method = SendMethod.Post;
         return this;
     }
 
@@ -280,7 +256,7 @@ public class Molley {
      * @return
      */
     public Molley asGet() {
-        method = GET;
+        method = SendMethod.Get;
         return this;
     }
 
@@ -288,7 +264,7 @@ public class Molley {
      * @return
      */
     public Molley asPut() {
-        method = PUT;
+        method = SendMethod.Put;
         return this;
     }
 
@@ -296,12 +272,12 @@ public class Molley {
      * @return
      */
     public Molley asDelete() {
-        method = DELETE;
+        method = SendMethod.Delete;
         return this;
     }
 
     public Molley contentJSON() {
-        contentType = CONTENT_TYPE_JSON;
+        contentType = SendType.Json;
         return this;
     }
 
@@ -316,13 +292,12 @@ public class Molley {
      */
     public <T> void send(final ResultHandler<T> resultHandler) {
         try {
-            StringRequest request = new StringRequest(method, uri, new Response.Listener<String>() {
+            StringRequest request = new StringRequest(method.getVolleyMethod(), uri, new Response.Listener<String>() {
 
                 @Override
                 public void onResponse(String response) {
                     Class<T> parameterClass = (Class<T>) ((ParameterizedType) resultHandler.getClass().getGenericInterfaces()[0])
                             .getActualTypeArguments()[0];
-                    Log.d("poloniexer", "class of generic type=" + parameterClass);
                     if (parameterClass == String.class) {
                         resultHandler.onAPIResult((T) response);
                     } else if (parameterClass == JSONObject.class) {

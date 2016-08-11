@@ -3,6 +3,7 @@ package com.grasea.grandroid.app;
 import android.app.Application;
 
 import com.grasea.grandroid.mvp.GrandroidPresenter;
+import com.grasea.grandroid.mvp.api.RemoteProxy;
 import com.grasea.grandroid.mvp.model.ModelProxy;
 import com.grasea.grandroid.net.Molley;
 
@@ -20,6 +21,7 @@ public class GrandroidApplication extends Application {
         presenterMap = new ConcurrentHashMap<>();
         Molley.init(getApplicationContext());
         ModelProxy.init(getApplicationContext());
+        RemoteProxy.init(getApplicationContext());
     }
 
     public void putPresenter(GrandroidPresenter presenter) {

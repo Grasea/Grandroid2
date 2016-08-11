@@ -14,7 +14,7 @@ import com.grasea.grandroid.mvpframework.R;
 import de.greenrobot.event.EventBus;
 
 /**
- * Created by USER on 2016/5/7.
+ * Created by Rovers on 2016/5/7.
  */
 public abstract class GrandroidActivity<P extends GrandroidPresenter> extends AppCompatActivity {
     protected GrandroidPresenter presenter;

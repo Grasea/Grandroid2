@@ -53,4 +53,12 @@
         android:text="Put  person list to memory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    <Button android:id="@+id/btnCallApiJson"
+        android:text="Call remote weather api as JSON"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button android:id="@+id/btnCallApiObject"
+        android:text="Call remote weather api as Object"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

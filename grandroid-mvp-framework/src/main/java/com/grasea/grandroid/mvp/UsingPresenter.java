@@ -4,7 +4,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Created by USER on 2016/5/7.
+ * Created by Rovers on 2016/5/7.
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UsingPresenter {

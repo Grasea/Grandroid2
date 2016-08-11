@@ -85,7 +85,7 @@ public enum DefaultValue {
             case EMPTY_STRING:
                 return false;
             case NULL:
-                return null;
+                return false;
             default:
                 return false;
         }

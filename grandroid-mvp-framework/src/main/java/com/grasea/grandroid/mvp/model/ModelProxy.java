@@ -2,6 +2,7 @@ package com.grasea.grandroid.mvp.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.grasea.grandroid.database.FaceData;
 import com.grasea.grandroid.database.GenericHelper;
@@ -18,7 +19,7 @@ import graneric.ProxyObject;
 /**
  * Created by Rovers on 2016/5/7.
  */
-public class ModelProxy extends ProxyObject {
+public class ModelProxy extends ProxyObject<ModelProxy> {
     private static Context context;
     private static final ConcurrentHashMap<String, Object> objectMap = new ConcurrentHashMap<>();
 
@@ -30,15 +31,16 @@ public class ModelProxy extends ProxyObject {
         ModelProxy.context = context;
     }
 
-    public ModelProxy() {
+    public static <T> T reflect(Class<T> c) {
+        return reflect(c, new ModelProxy(c));
     }
 
-    public ModelProxy(Object entity) {
-        super(entity);
+    protected ModelProxy(Class subjectInterface) {
+        super(subjectInterface);
     }
 
     @Put()
-    protected static boolean put(final Annotation ann, Method m, Object[] args) {
+    protected static boolean put(ModelProxy instance, final Annotation ann, Method m, Object[] args) {
         if (args.length > 0) {
             switch (((Put) ann).storage()) {
                 case Memory:
@@ -140,7 +142,7 @@ public class ModelProxy extends ProxyObject {
     }
 
     @Get()
-    protected static Object get(final Annotation ann, Method m, Object[] args) {
+    protected static Object get(ModelProxy instance, final Annotation ann, Method m, Object[] args) {
         final String key = ((Get) ann).value();
         switch (((Get) ann).storage()) {
             case Memory:
@@ -188,7 +190,7 @@ public class ModelProxy extends ProxyObject {
     }
 
     @Save()
-    protected static boolean save(final Annotation ann, Method m, Object[] args) {
+    protected static boolean save(ModelProxy instance, final Annotation ann, Method m, Object[] args) {
         final FaceData fd = new FaceData(context, "default");
         if (args.length > 0) {
             return new ObjectTypeHandler<Boolean>(args[0]) {
@@ -234,7 +236,7 @@ public class ModelProxy extends ProxyObject {
     }
 
     @Query()
-    protected static Object query(final Annotation ann, Method m, Object[] args) {
+    protected static Object query(ModelProxy instance, final Annotation ann, Method m, Object[] args) {
         final FaceData fd = new FaceData(context, "default");
         final Class objClass = ((Query) ann).value();
         String where = ((Query) ann).where();

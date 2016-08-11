@@ -1,76 +1,87 @@
 package graneric;
 
+import android.util.Log;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import graneric.annotation.Anno;
-import graneric.annotation.ProxyMethod;
 
 /**
  * Created by Rovers on 2016/7/29.
  */
-public class ProxyObject implements java.lang.reflect.InvocationHandler {
-    protected Object entity;
-    protected static HashMap<Class<? extends Annotation>, Method> annoMap;
+public class ProxyObject<S extends ProxyObject> implements java.lang.reflect.InvocationHandler {
+    protected Class subjectInterface;
+    protected static ConcurrentHashMap<Class<? extends Annotation>, Method> annoMap;
 
-    public ProxyObject() {
-    }
-
-    public ProxyObject(Object entity) {
-        this.entity = entity;
+    protected ProxyObject(Class subjectInterface) {
+        this.subjectInterface = subjectInterface;
     }
 
     public static void bindAnnotationHandler(Class c) {
-        annoMap = Anno.scanMethod(c);
+        if (annoMap == null) {
+            annoMap = new ConcurrentHashMap<>();
+        }
+        annoMap.putAll(Anno.scanMethod(c));
     }
 
-    public static <T> T reflect(Class<T> c) {
-        return (T) java.lang.reflect.Proxy.newProxyInstance(
+    protected static <T> T reflect(Class<T> c, ProxyObject proxyObject) {
+        T instance = (T) java.lang.reflect.Proxy.newProxyInstance(
                 c.getClassLoader(),
                 new Class[]{c},
-                new ProxyObject());
+                proxyObject);
+        Annotation[] anns = c.getAnnotations();
+        if (anns != null) {
+            for (Annotation ann : anns) {
+                proxyObject.onAnnotationDetected(ann);
+            }
+        }
+        return instance;
     }
 
-    public static <T> T reflect(Class<T> c, Object entity) {
-        return (T) java.lang.reflect.Proxy.newProxyInstance(
-                c.getClassLoader(),
-                new Class[]{c},
-                new ProxyObject(entity));
+    protected void onAnnotationDetected(Annotation annotation) {
+    }
+
+    public Class getSubjectInterface() {
+        return subjectInterface;
+    }
+
+    public boolean isAnnotationPresent(Class annotationType) {
+        return subjectInterface.isAnnotationPresent(annotationType);
+    }
+
+    public <T> Annotation getAnnotation(Class<T> annotationType) {
+        return subjectInterface.getAnnotation(annotationType);
     }
 
     public Object invoke(Object proxy, Method m, Object[] args) throws Throwable {
-        Annotation[] anns = m.getAnnotations();
+        //Log.d("grandroid", "got proxy method invoked");
         Object[] v = args;
-        if (m.isAnnotationPresent(ProxyMethod.class)) {
-            if (entity == null) {
-                throw new NullPointerException();
-            }
-            return m.invoke(entity, v);
-        } else {
-            Object result = null;
-            if (annoMap == null) {
-                bindAnnotationHandler(this.getClass());
-            }
-            for (int i = 0; i < anns.length; i++) {
-                if (annoMap.containsKey(anns[i].annotationType())) {
-                    try {
-
-                        result = annoMap.get(anns[i].annotationType()).invoke(null, anns[i], m, args);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    result = executeAnnotationAction(anns[i], m, v);
-                }
-                v = new Object[]{result};
-            }
-            return result;
+        Annotation[] anns = m.getAnnotations();
+        Object result = null;
+        if (annoMap == null) {
+            bindAnnotationHandler(this.getClass());
         }
+        for (int i = 0; i < anns.length; i++) {
+            if (annoMap.containsKey(anns[i].annotationType())) {
+                //Log.d("grandroid", "try to invoke method " + annoMap.get(anns[i].annotationType()) + ", instance=" + this + ", ann=" + anns[i] + ", m=" + m);
+                try {
+                    result = annoMap.get(anns[i].annotationType()).invoke(null, (S) this, anns[i], m, v);
+
+                } catch (Exception e) {
+                    Log.e("grandroid", null, e);
+                }
+            } else {
+                result = executeAnnotationAction((S) this, anns[i], m, v);
+            }
+            v = new Object[]{result};
+        }
+        return result;
         //result = m.invoke(obj, args);
     }
 
-    protected Object executeAnnotationAction(Annotation ann, Method m, Object[] args) {
+    protected Object executeAnnotationAction(S instance, Annotation ann, Method m, Object[] args) {
         return null;
     }
 }

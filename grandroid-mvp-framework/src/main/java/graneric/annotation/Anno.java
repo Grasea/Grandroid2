@@ -2,6 +2,7 @@ package graneric.annotation;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -20,4 +21,14 @@ public class Anno {
         return map;
     }
 
+    public static ArrayList<Method> scanMethodForAnnotation(Class c, Class annotationType) {
+        ArrayList<Method> list = new ArrayList<>();
+        Method[] ms = c.getDeclaredMethods();
+        for (Method m : ms) {
+            if (m.isAnnotationPresent(annotationType)) {
+                list.add(m);
+            }
+        }
+        return list;
+    }
 }

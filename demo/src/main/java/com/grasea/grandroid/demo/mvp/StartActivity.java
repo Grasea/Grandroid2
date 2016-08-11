@@ -1,17 +1,24 @@
 package com.grasea.grandroid.demo.mvp;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
 import com.grasea.grandroid.demo.R;
+import com.grasea.grandroid.mvp.api.Callback;
+import com.grasea.grandroid.mvp.api.RemoteProxy;
 import com.grasea.grandroid.mvp.model.ModelProxy;
+import com.grasea.grandroid.net.SendMethod;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 public class StartActivity extends AppCompatActivity {
     private DataModel model = ModelProxy.reflect(DataModel.class);
+    private WeatherAPI api = RemoteProxy.reflect(WeatherAPI.class, StartActivity.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +63,7 @@ public class StartActivity extends AppCompatActivity {
                         break;
                     case R.id.btnSavePerson:
                         Person person = new Person();
-                        person.setGender(model.getGender());
+                        person.setGender(true);
                         person.setAge(model.getAge());
                         person.setName(model.getName());
                         Toast.makeText(getApplicationContext(), "Save success? " + model.saveUserData(person), Toast.LENGTH_SHORT).show();
@@ -66,8 +73,14 @@ public class StartActivity extends AppCompatActivity {
                         break;
                     case R.id.btnPutPersonList:
                         ArrayList<Person> ps = model.getAllPerson();
-                        Person s =model.getPerson("where _id=0");
+                        Person s = model.getPerson("where _id=0");
                         Toast.makeText(getApplicationContext(), "Save success? " + model.putPersonList(ps), Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.btnCallApiJson:
+                        api.getForecast();
+                        break;
+                    case R.id.btnCallApiObject:
+                        api.getForecastObject();
                         break;
                 }
             }
@@ -83,5 +96,18 @@ public class StartActivity extends AppCompatActivity {
         findViewById(R.id.btnSavePerson).setOnClickListener(listener);
         findViewById(R.id.btnPutPersonList).setOnClickListener(listener);
         findViewById(R.id.btnGetPersonList).setOnClickListener(listener);
+        findViewById(R.id.btnCallApiJson).setOnClickListener(listener);
+        findViewById(R.id.btnCallApiObject).setOnClickListener(listener);
+
+    }
+
+    @Callback(value = "getForecast")
+    public static void onJSONResult(Context context, JSONObject result) {
+        Toast.makeText(context, "forecast result: " + result.toString(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Callback(value = "getForecastObject")
+    public static void onObjectResult(Context context, Forecast result) {
+        Toast.makeText(context, "forecast result: " + result.result.hourly.cloudrate.toString(), Toast.LENGTH_SHORT).show();
     }
 }
