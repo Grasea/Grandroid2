@@ -75,8 +75,8 @@ public abstract class GrandroidActivity<P extends GrandroidPresenter> extends Ap
      * @param tag
      * @param args
      */
-    public void turnToFragment(Class<? extends Fragment> fragmentClass, String tag, Bundle args) {
-        turnToFragment(fragmentClass, tag, args, true);
+    public void changeFragmentClearTop(Class<? extends Fragment> fragmentClass, String tag, Bundle args) {
+        changeFragment(fragmentClass, tag, args, true);
     }
 
     /**
@@ -87,7 +87,7 @@ public abstract class GrandroidActivity<P extends GrandroidPresenter> extends Ap
      * @param args
      * @param inHistory
      */
-    public void turnToFragment(Class<? extends Fragment> fragmentClass, String tag, Bundle args, boolean inHistory) {
+    public void changeFragmentClearTop(Class<? extends Fragment> fragmentClass, String tag, Bundle args, boolean inHistory) {
         changeFragment(fragmentClass, tag, args, inHistory, true);
     }
 
