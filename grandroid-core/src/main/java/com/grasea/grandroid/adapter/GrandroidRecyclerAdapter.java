@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by Alan Ding on 2016/5/27.
  */
-public abstract class GrandroidRecyclerAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> implements MultipleSelector, OnClickable<T> {
+public abstract class GrandroidRecyclerAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> implements MultipleSelector, OnClickable<T, VH> {
     private SparseBooleanArray selectedItems = new SparseBooleanArray();
 
 
@@ -44,7 +44,7 @@ public abstract class GrandroidRecyclerAdapter<T, VH extends RecyclerView.ViewHo
     }
 
     @Override
-    public abstract void onItemClick(int index, T item);
+    public abstract void onItemClick(VH holder, int index, T item);
 
     @Override
     public VH onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -92,7 +92,7 @@ public abstract class GrandroidRecyclerAdapter<T, VH extends RecyclerView.ViewHo
                 if (chooseMode != ChooseMode.NONE) {
                     toggleSelection(position);
                 }
-                onItemClick(position, itemData);
+                onItemClick(holder, position, itemData);
             }
         });
         if (chooseMode != ChooseMode.NONE) {

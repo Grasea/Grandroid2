@@ -40,7 +40,7 @@ public class ModelProxy extends ProxyObject<ModelProxy> {
     }
 
     @Put()
-    protected static boolean put(ModelProxy instance, final Annotation ann, Method m, Object[] args) {
+    public static boolean put(ModelProxy instance, final Annotation ann, Method m, Object[] args) {
         if (args.length > 0) {
             switch (((Put) ann).storage()) {
                 case Memory:
@@ -142,7 +142,7 @@ public class ModelProxy extends ProxyObject<ModelProxy> {
     }
 
     @Get()
-    protected static Object get(ModelProxy instance, final Annotation ann, Method m, Object[] args) {
+    public static Object get(ModelProxy instance, final Annotation ann, Method m, Object[] args) {
         final String key = ((Get) ann).value();
         switch (((Get) ann).storage()) {
             case Memory:
@@ -190,7 +190,7 @@ public class ModelProxy extends ProxyObject<ModelProxy> {
     }
 
     @Save()
-    protected static boolean save(ModelProxy instance, final Annotation ann, Method m, Object[] args) {
+    public static boolean save(ModelProxy instance, final Annotation ann, Method m, Object[] args) {
         final FaceData fd = new FaceData(context, "default");
         if (args.length > 0) {
             return new ObjectTypeHandler<Boolean>(args[0]) {
@@ -236,7 +236,7 @@ public class ModelProxy extends ProxyObject<ModelProxy> {
     }
 
     @Query()
-    protected static Object query(ModelProxy instance, final Annotation ann, Method m, Object[] args) {
+    public static Object query(ModelProxy instance, final Annotation ann, Method m, Object[] args) {
         final FaceData fd = new FaceData(context, "default");
         final Class objClass = ((Query) ann).value();
         String where = ((Query) ann).where();
