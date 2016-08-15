@@ -19,8 +19,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by Rovers on 2016/5/7.
  */
 public class RemoteProxy extends ProxyObject<RemoteProxy> {
-    private static Context context;
-
     static {
         bindAnnotationHandler(RemoteProxy.class);
     }
@@ -30,10 +28,6 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
     protected ConcurrentHashMap<String, Method> callbackMap;
     protected Retrofit retrofit;
     protected Object retrofitService;
-
-    public static void init(Context context) {
-        RemoteProxy.context = context;
-    }
 
     public static <T> T reflect(Class<T> interfaceClass, Object callback) {
         return reflect(interfaceClass, new RemoteProxy(interfaceClass, callback));
@@ -75,7 +69,7 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
                 @Override
                 public void onResponse(Call call, Response response) {
                     try {
-                        callbackMethod.invoke(callback, context, response.body());
+                        callbackMethod.invoke(callback, response.body());
                     } catch (IllegalAccessException e) {
                         Log.e("grandroid", null, e);
                     } catch (InvocationTargetException e) {

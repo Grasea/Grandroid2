@@ -21,7 +21,6 @@ public class GrandroidApplication extends Application {
         presenterMap = new ConcurrentHashMap<>();
         Molley.init(getApplicationContext());
         ModelProxy.init(getApplicationContext());
-        RemoteProxy.init(getApplicationContext());
     }
 
     public void putPresenter(GrandroidPresenter presenter) {

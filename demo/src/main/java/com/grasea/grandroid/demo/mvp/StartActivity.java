@@ -118,8 +118,8 @@ public class StartActivity extends AppCompatActivity {
     }
 
     @Callback("getForecast")
-    public void onGetForecast(Context context, Forecast result) {
-        Toast.makeText(context, "forecast result: " + result.status, Toast.LENGTH_SHORT).show();
+    public void onGetForecast(Forecast result) {
+        Toast.makeText(this, "forecast result: " + result.status, Toast.LENGTH_SHORT).show();
     }
 
 }
