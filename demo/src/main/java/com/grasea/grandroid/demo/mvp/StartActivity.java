@@ -3,17 +3,24 @@ package com.grasea.grandroid.demo.mvp;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.grasea.database.json.JSONConverter;
 import com.grasea.grandroid.demo.R;
 import com.grasea.grandroid.api.Callback;
 import com.grasea.grandroid.api.RemoteProxy;
 import com.grasea.grandroid.mvp.model.ModelProxy;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class StartActivity extends AppCompatActivity {
     private UserModel model;
@@ -23,7 +30,7 @@ public class StartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         model = ModelProxy.reflect(UserModel.class);
-        api = RemoteProxy.reflect(WeatherAPI.class, StartActivity.class);
+        api = RemoteProxy.reflect(WeatherAPI.class, this);
         setContentView(R.layout.activity_start);
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
@@ -78,10 +85,18 @@ public class StartActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Save success? " + model.putPersonList(ps), Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.btnCallApiJson:
-                        api.getForecast();
+                        api.getForecast();//this api will be fire automatically because there is a callback method defined in callback object
                         break;
                     case R.id.btnCallApiObject:
-                        api.getForecastObject();
+                        Call<Forecast> call = api.getForecastObject();//without callback method define, this call wont be call automatically
+                        Response<Forecast> response = null;
+                        try {
+                            response = call.execute();//this line will crash app because we execute network job in Main thread
+                            Toast.makeText(getApplicationContext(), response.body().status, Toast.LENGTH_SHORT).show();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        //api.getForecastObject();
                         break;
                 }
             }
@@ -102,13 +117,9 @@ public class StartActivity extends AppCompatActivity {
 
     }
 
-    @Callback(api="forecast")
-    public void onGetForecast(Context context, JSONObject result) {
-        Toast.makeText(context, "forecast result: " + result.toString(), Toast.LENGTH_SHORT).show();
+    @Callback("getForecast")
+    public void onGetForecast(Context context, Forecast result) {
+        Toast.makeText(context, "forecast result: " + result.status, Toast.LENGTH_SHORT).show();
     }
 
-    @Callback(api="getForecastObject")
-    public void onObjectResult(Context context, Forecast result) {
-        Toast.makeText(context, "forecast result: " + result.result.hourly.cloudrate.toString(), Toast.LENGTH_SHORT).show();
-    }
 }

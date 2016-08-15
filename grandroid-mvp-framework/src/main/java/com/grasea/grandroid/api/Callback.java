@@ -8,5 +8,5 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Callback {
-    String api() default "";
+    String value() default "";
 }

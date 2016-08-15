@@ -3,13 +3,6 @@ package com.grasea.grandroid.api;
 import android.content.Context;
 import android.util.Log;
 
-import com.grasea.database.json.JSONConverter;
-import com.grasea.grandroid.net.Molley;
-import com.grasea.grandroid.net.ResultHandler;
-
-import org.json.JSONObject;
-
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -17,6 +10,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import graneric.ProxyObject;
 import graneric.annotation.Anno;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Rovers on 2016/5/7.
@@ -29,25 +26,32 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
     }
 
     private String baseUrl;
-    private Class callbackClass;
+    private Object callback;
     protected ConcurrentHashMap<String, Method> callbackMap;
+    protected Retrofit retrofit;
+    protected Object retrofitService;
 
     public static void init(Context context) {
         RemoteProxy.context = context;
     }
 
-    public static <T> T reflect(Class<T> interfaceClass, Class callbackClass) {
-        return reflect(interfaceClass, new RemoteProxy(interfaceClass, callbackClass));
+    public static <T> T reflect(Class<T> interfaceClass, Object callback) {
+        return reflect(interfaceClass, new RemoteProxy(interfaceClass, callback));
     }
 
-    protected RemoteProxy(Class subjectInterface, Class callbackClass) {
+    protected RemoteProxy(Class subjectInterface, Object callback) {
         super(subjectInterface);
         this.baseUrl = ((Backend) getAnnotation(Backend.class)).value();
-        this.callbackClass = callbackClass;
+        this.callback = callback;
         callbackMap = new ConcurrentHashMap<>();
-        ArrayList<Method> methods = Anno.scanMethodForAnnotation(callbackClass, Callback.class);
+        retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        retrofitService = retrofit.create(subjectInterface);
+        ArrayList<Method> methods = Anno.scanMethodForAnnotation(callback.getClass(), Callback.class);
         for (Method m : methods) {
-            callbackMap.put(m.getAnnotation(Callback.class).api(), m);
+            callbackMap.put(m.getAnnotation(Callback.class).value(), m);
         }
     }
 
@@ -63,32 +67,28 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
         }
     }
 
-    @API()
-    protected static boolean api(final RemoteProxy proxy, final Annotation ann, final Method m, Object[] args) throws Exception {
-        new Molley(proxy.getBaseUrl() + m.getAnnotation(API.class).path()).setMethod(m.getAnnotation(API.class).method()).send(new ResultHandler<JSONObject>() {
-            @Override
-            public void onAPIResult(JSONObject content) {
-                Method callback = proxy.getCallbackMethod(m.getName());
-                if (callback != null) {
+    public Object invoke(Object proxy, final Method m, Object[] args) throws Throwable {
+        retrofit2.Call call = (Call) m.invoke(retrofitService, args);
+        final Method callbackMethod = getCallbackMethod(m.getName());
+        if (callbackMethod != null) {
+            call.enqueue(new retrofit2.Callback() {
+                @Override
+                public void onResponse(Call call, Response response) {
                     try {
-                        if (callback.getParameterTypes()[1].equals(JSONObject.class)) {
-                            callback.invoke(null, context, content);
-                        } else {
-                            callback.invoke(null, context, JSONConverter.toObject(content, callback.getParameterTypes()[1]));
-                        }
+                        callbackMethod.invoke(callback, context, response.body());
                     } catch (IllegalAccessException e) {
                         Log.e("grandroid", null, e);
                     } catch (InvocationTargetException e) {
                         Log.e("grandroid", null, e);
                     }
                 }
-            }
 
-            @Override
-            public void onAPIError(Throwable t) {
-                Log.e("grandroid", null, t);
-            }
-        });
-        return true;
+                @Override
+                public void onFailure(Call call, Throwable t) {
+
+                }
+            });
+        }
+        return call;
     }
 }

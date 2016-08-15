@@ -5,10 +5,10 @@ android {
     buildToolsVersion "23.0.3"
     productFlavors{
         dev{
-            buildConfigField("String","API_URL",'"http://api.caiyunapp.com/v2/KtK4V+sX75AisJEd"')
+            buildConfigField("String","API_URL",'"http://api.caiyunapp.com/v2/KtK4V+sX75AisJEd/"')
         }
         prod{
-            buildConfigField("String","API_URL",'"http://api.caiyunapp.com/v2/KtK4V+sX75AisJEd"')
+            buildConfigField("String","API_URL",'"http://api.caiyunapp.com/v2/KtK4V+sX75AisJEd/"')
         }
     }
     defaultConfig {
