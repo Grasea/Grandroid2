@@ -1,19 +1,21 @@
 package com.grasea.grandroid.demo.mvp;
 
-import com.grasea.grandroid.mvp.api.API;
-import com.grasea.grandroid.mvp.api.Backend;
+import com.grasea.grandroid.demo.BuildConfig;
+import com.grasea.grandroid.api.API;
+import com.grasea.grandroid.api.Backend;
 import com.grasea.grandroid.net.SendMethod;
-
-import org.json.JSONObject;
+import com.grasea.grandroid.net.SendType;
 
 /**
  * Created by Rovers on 2016/8/11.
  */
-@Backend("http://api.caiyunapp.com/v2/KtK4V+sX75AisJEd")
+@Backend(BuildConfig.API_URL)
 public interface WeatherAPI {
-    @API(value = "/121.5223,25.0270/forecast", method = SendMethod.Get)
+    @API(name = "forecast", path = "/121.5223,25.0270/forecast", method = SendMethod.Get, contentType = SendType.Json)
     public boolean getForecast();
 
-    @API(value = "/121.5223,25.0270/forecast", method = SendMethod.Get)
+    @API(name = "forecast2", path = "/121.5223,25.0270/forecast", method = SendMethod.Get)
     public boolean getForecastObject();
+
+
 }

@@ -1,17 +1,9 @@
-package com.grasea.grandroid.mvp.api;
+package com.grasea.grandroid.api;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.grasea.database.json.JSONConverter;
-import com.grasea.grandroid.database.FaceData;
-import com.grasea.grandroid.database.GenericHelper;
-import com.grasea.grandroid.database.Identifiable;
-import com.grasea.grandroid.mvp.model.Get;
-import com.grasea.grandroid.mvp.model.Put;
-import com.grasea.grandroid.mvp.model.Query;
-import com.grasea.grandroid.mvp.model.Save;
 import com.grasea.grandroid.net.Molley;
 import com.grasea.grandroid.net.ResultHandler;
 
@@ -23,7 +15,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import graneric.ObjectTypeHandler;
 import graneric.ProxyObject;
 import graneric.annotation.Anno;
 
@@ -56,7 +47,7 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
         callbackMap = new ConcurrentHashMap<>();
         ArrayList<Method> methods = Anno.scanMethodForAnnotation(callbackClass, Callback.class);
         for (Method m : methods) {
-            callbackMap.put(m.getAnnotation(Callback.class).value(), m);
+            callbackMap.put(m.getAnnotation(Callback.class).api(), m);
         }
     }
 
@@ -74,7 +65,7 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
 
     @API()
     protected static boolean api(final RemoteProxy proxy, final Annotation ann, final Method m, Object[] args) throws Exception {
-        new Molley(proxy.getBaseUrl() + m.getAnnotation(API.class).value()).setMethod(m.getAnnotation(API.class).method()).send(new ResultHandler<JSONObject>() {
+        new Molley(proxy.getBaseUrl() + m.getAnnotation(API.class).path()).setMethod(m.getAnnotation(API.class).method()).send(new ResultHandler<JSONObject>() {
             @Override
             public void onAPIResult(JSONObject content) {
                 Method callback = proxy.getCallbackMethod(m.getName());

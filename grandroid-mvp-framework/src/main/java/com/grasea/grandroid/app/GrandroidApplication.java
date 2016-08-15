@@ -3,7 +3,7 @@ package com.grasea.grandroid.app;
 import android.app.Application;
 
 import com.grasea.grandroid.mvp.GrandroidPresenter;
-import com.grasea.grandroid.mvp.api.RemoteProxy;
+import com.grasea.grandroid.api.RemoteProxy;
 import com.grasea.grandroid.mvp.model.ModelProxy;
 import com.grasea.grandroid.net.Molley;
 

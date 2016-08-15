@@ -1,8 +1,5 @@
-package com.grasea.grandroid.mvp.api;
+package com.grasea.grandroid.api;
 
-import com.android.volley.Request;
-import com.grasea.grandroid.mvp.model.DefaultValue;
-import com.grasea.grandroid.mvp.model.Storage;
 import com.grasea.grandroid.net.SendMethod;
 import com.grasea.grandroid.net.SendType;
 
@@ -14,9 +11,10 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface API {
-    String value() default "";
+    //name
+    String name() default "";
 
-    //String path() default "";
+    String path() default "";
 
     SendMethod method() default SendMethod.Post;
 

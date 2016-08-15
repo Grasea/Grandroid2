@@ -3,7 +3,14 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
-
+    productFlavors{
+        dev{
+            buildConfigField("String","API_URL",'"http://api.caiyunapp.com/v2/KtK4V+sX75AisJEd"')
+        }
+        prod{
+            buildConfigField("String","API_URL",'"http://api.caiyunapp.com/v2/KtK4V+sX75AisJEd"')
+        }
+    }
     defaultConfig {
         applicationId "com.grasea.grandroid.demo"
         minSdkVersion 18
@@ -19,6 +26,8 @@ android {
     }
 }
 apply plugin: 'com.neenbedankt.android-apt'
+
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])

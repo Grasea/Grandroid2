@@ -7,22 +7,23 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.grasea.grandroid.demo.R;
-import com.grasea.grandroid.mvp.api.Callback;
-import com.grasea.grandroid.mvp.api.RemoteProxy;
+import com.grasea.grandroid.api.Callback;
+import com.grasea.grandroid.api.RemoteProxy;
 import com.grasea.grandroid.mvp.model.ModelProxy;
-import com.grasea.grandroid.net.SendMethod;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 public class StartActivity extends AppCompatActivity {
-    private DataModel model = ModelProxy.reflect(DataModel.class);
-    private WeatherAPI api = RemoteProxy.reflect(WeatherAPI.class, StartActivity.class);
+    private UserModel model;
+    private WeatherAPI api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        model = ModelProxy.reflect(UserModel.class);
+        api = RemoteProxy.reflect(WeatherAPI.class, StartActivity.class);
         setContentView(R.layout.activity_start);
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
@@ -101,13 +102,13 @@ public class StartActivity extends AppCompatActivity {
 
     }
 
-    @Callback(value = "getForecast")
-    public static void onJSONResult(Context context, JSONObject result) {
+    @Callback(api="forecast")
+    public void onGetForecast(Context context, JSONObject result) {
         Toast.makeText(context, "forecast result: " + result.toString(), Toast.LENGTH_SHORT).show();
     }
 
-    @Callback(value = "getForecastObject")
-    public static void onObjectResult(Context context, Forecast result) {
+    @Callback(api="getForecastObject")
+    public void onObjectResult(Context context, Forecast result) {
         Toast.makeText(context, "forecast result: " + result.result.hourly.cloudrate.toString(), Toast.LENGTH_SHORT).show();
     }
 }

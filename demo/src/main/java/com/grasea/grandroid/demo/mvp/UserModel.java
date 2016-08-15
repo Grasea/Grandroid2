@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by Rovers on 2016/7/19.
  */
-public interface DataModel {
+public interface UserModel {
 
     @Put("name")
     public boolean saveName(String name);
@@ -38,7 +38,7 @@ public interface DataModel {
     @Save(Person.class)
     public boolean saveUserData(Person account);
 
-    @Query(value = Person.class)
+    @Query(Person.class)
     public ArrayList<Person> getAllPerson();
 
     @Query(Person.class)
