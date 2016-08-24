@@ -1,20 +1,15 @@
 package com.grasea.grandroid.demo.mvp;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.grasea.database.json.JSONConverter;
-import com.grasea.grandroid.demo.R;
 import com.grasea.grandroid.api.Callback;
 import com.grasea.grandroid.api.RemoteProxy;
+import com.grasea.grandroid.api.RequestFail;
+import com.grasea.grandroid.demo.R;
 import com.grasea.grandroid.mvp.model.ModelProxy;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -122,4 +117,13 @@ public class StartActivity extends AppCompatActivity {
         Toast.makeText(this, "forecast result: " + result.status, Toast.LENGTH_SHORT).show();
     }
 
+    @RequestFail("getForecast")
+    public void onGetForecastFail(String methodName, Throwable t) {
+        Toast.makeText(this, "Request " + methodName + " fail: " + t.toString(), Toast.LENGTH_SHORT).show();
+    }
+
+    @RequestFail()
+    public void onRequestFail(String methodName, Throwable t) {
+        Toast.makeText(this, "Request " + methodName + " fail: " + t.toString(), Toast.LENGTH_SHORT).show();
+    }
 }

@@ -26,6 +26,7 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
     private String baseUrl;
     private Object callback;
     protected ConcurrentHashMap<String, Method> callbackMap;
+    protected ConcurrentHashMap<String, Method> requestFailMap;
     protected Retrofit retrofit;
     protected Object retrofitService;
 
@@ -38,6 +39,7 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
         this.baseUrl = ((Backend) getAnnotation(Backend.class)).value();
         this.callback = callback;
         callbackMap = new ConcurrentHashMap<>();
+        requestFailMap = new ConcurrentHashMap<>();
         retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -46,6 +48,10 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
         ArrayList<Method> methods = Anno.scanMethodForAnnotation(callback.getClass(), Callback.class);
         for (Method m : methods) {
             callbackMap.put(m.getAnnotation(Callback.class).value(), m);
+        }
+        methods = Anno.scanMethodForAnnotation(callback.getClass(), RequestFail.class);
+        for (Method m : methods) {
+            requestFailMap.put(m.getAnnotation(RequestFail.class).value(), m);
         }
     }
 
@@ -58,6 +64,17 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
             return callbackMap.get(methodName);
         } else {
             return null;
+        }
+    }
+
+    protected Method getRequestFailMethod(String methodName) {
+        if (requestFailMap.containsKey(methodName)) {
+            return requestFailMap.get(methodName);
+        } else {
+            if (requestFailMap.containsKey("")) {
+                return requestFailMap.get("");
+            } else
+                return null;
         }
     }
 
@@ -79,7 +96,16 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
 
                 @Override
                 public void onFailure(Call call, Throwable t) {
-
+                    Method requestFailMethod = getRequestFailMethod(m.getName());
+                    if (requestFailMethod != null) {
+                        try {
+                            requestFailMethod.invoke(callback, m.getName(), t);
+                        } catch (IllegalAccessException e) {
+                            Log.e("grandroid", null, e);
+                        } catch (InvocationTargetException e) {
+                            Log.e("grandroid", null, e);
+                        }
+                    }
                 }
             });
         }

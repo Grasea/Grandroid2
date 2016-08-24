@@ -23,7 +23,7 @@ public class Anno {
 
     public static ArrayList<Method> scanMethodForAnnotation(Class c, Class annotationType) {
         ArrayList<Method> list = new ArrayList<>();
-        Method[] ms = c.getDeclaredMethods();
+        Method[] ms = c.getMethods();
         for (Method m : ms) {
             if (m.isAnnotationPresent(annotationType)) {
                 list.add(m);
