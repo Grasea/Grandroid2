@@ -9,4 +9,13 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Backend {
     String value() default "";
+
+    //Connection Timeout, 0 means using OKHttp Client default value
+    int timeout() default 0;
+
+    //0 means using OKHttp Client default value
+    int readTimeout() default 0;
+
+    //0 means using OKHttp Client default value
+    int writeTimeout() default 0;
 }
