@@ -1,6 +1,9 @@
 package com.grasea.grandroid.adapter;
 
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +18,8 @@ import java.util.List;
  * Created by Alan Ding on 2016/5/27.
  */
 public abstract class GrandroidRecyclerAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> implements MultipleSelector, OnClickable<T, VH> {
-    private SparseBooleanArray selectedItems = new SparseBooleanArray();
 
+    private SparseBooleanArray selectedItems = new SparseBooleanArray();
 
     public enum ChooseMode {
         NONE, SINGLE, MULTIPLE
@@ -30,17 +33,11 @@ public abstract class GrandroidRecyclerAdapter<T, VH extends RecyclerView.ViewHo
     private int currentItem = -1;
 
 
-    public GrandroidRecyclerAdapter(ArrayList<T> list, Class recyclerItemConfigClass) {
+    public GrandroidRecyclerAdapter(ArrayList<T> list, RecyclerItemConfig recyclerItemConfig) {
         this.list = list;
-        try {
-            this.recyclerItemConfig = (RecyclerItemConfig<VH>) recyclerItemConfigClass.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        itemIds = recyclerItemConfig.itemIds;
-        vhClass = recyclerItemConfig.vhClass;
+        this.recyclerItemConfig = recyclerItemConfig;
+        itemIds = this.recyclerItemConfig.itemIds;
+        vhClass = this.recyclerItemConfig.vhClass;
     }
 
     @Override
@@ -172,3 +169,4 @@ public abstract class GrandroidRecyclerAdapter<T, VH extends RecyclerView.ViewHo
     }
 
 }
+
