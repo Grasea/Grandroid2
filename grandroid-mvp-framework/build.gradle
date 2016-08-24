@@ -26,6 +26,7 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.+'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:+'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.grasea:grandroid-core:1.0.2'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.grasea:grandroid-actions:1.0.0'

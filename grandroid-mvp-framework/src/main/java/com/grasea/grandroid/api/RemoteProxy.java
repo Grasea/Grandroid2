@@ -7,9 +7,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 import graneric.ProxyObject;
 import graneric.annotation.Anno;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -36,14 +38,28 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
 
     protected RemoteProxy(Class subjectInterface, Object callback) {
         super(subjectInterface);
-        this.baseUrl = ((Backend) getAnnotation(Backend.class)).value();
+        Backend backend = (Backend) getAnnotation(Backend.class);
+        this.baseUrl = backend.value();
         this.callback = callback;
         callbackMap = new ConcurrentHashMap<>();
         requestFailMap = new ConcurrentHashMap<>();
-        retrofit = new Retrofit.Builder()
+        Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .addConverterFactory(GsonConverterFactory.create());
+        if (backend.timeout() > 0 || backend.readTimeout() > 0 || backend.writeTimeout() > 0) {
+            OkHttpClient.Builder okbuilder = new OkHttpClient.Builder();
+            if (backend.timeout() > 0) {
+                okbuilder.connectTimeout(backend.timeout(), TimeUnit.SECONDS);
+            }
+            if (backend.readTimeout() > 0) {
+                okbuilder.readTimeout(backend.readTimeout(), TimeUnit.SECONDS);
+            }
+            if (backend.writeTimeout() > 0) {
+                okbuilder.writeTimeout(backend.writeTimeout(), TimeUnit.SECONDS);
+            }
+            builder.client(okbuilder.build());
+        }
+        retrofit = builder.build();
         retrofitService = retrofit.create(subjectInterface);
         ArrayList<Method> methods = Anno.scanMethodForAnnotation(callback.getClass(), Callback.class);
         for (Method m : methods) {
@@ -80,6 +96,7 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
 
     public Object invoke(Object proxy, final Method m, Object[] args) throws Throwable {
         retrofit2.Call call = (Call) m.invoke(retrofitService, args);
+
         final Method callbackMethod = getCallbackMethod(m.getName());
         if (callbackMethod != null) {
             call.enqueue(new retrofit2.Callback() {
