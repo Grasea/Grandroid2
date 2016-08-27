@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
-version = "2.0.5"
+version = "2.0.7"
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
@@ -24,8 +24,8 @@ android {
 }
 
 dependencies {
+    compile project(path: ':grandroid-core')
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.grasea:grandroid-core:1.0.2'
 }
 def siteUrl = 'https://github.com/Grasea/Grandroid2'      // GitHub主頁
 def gitUrl = 'https://github.com/Grasea/Grandroid2.git'   // Git URL

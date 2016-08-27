@@ -13,7 +13,6 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- *
  * @param <T>
  * @author Rovers
  */
@@ -26,7 +25,6 @@ public class ObjectAdapter<T> extends UniversalAdapter<T> implements ItemClickab
     protected boolean cycle;
 
     /**
-     *
      * @param context
      * @param list
      */
@@ -36,7 +34,6 @@ public class ObjectAdapter<T> extends UniversalAdapter<T> implements ItemClickab
     }
 
     /**
-     *
      * @param context
      * @param list
      */
@@ -63,7 +60,6 @@ public class ObjectAdapter<T> extends UniversalAdapter<T> implements ItemClickab
     }
 
     /**
-     *
      * @param list
      */
     public void setList(List<T> list) {
@@ -76,7 +72,6 @@ public class ObjectAdapter<T> extends UniversalAdapter<T> implements ItemClickab
     }
 
     /**
-     *
      * @return
      */
     public int getCount() {
@@ -92,7 +87,6 @@ public class ObjectAdapter<T> extends UniversalAdapter<T> implements ItemClickab
     }
 
     /**
-     *
      * @param index
      * @return
      */
@@ -101,7 +95,6 @@ public class ObjectAdapter<T> extends UniversalAdapter<T> implements ItemClickab
     }
 
     /**
-     *
      * @param index
      * @return
      */
@@ -110,7 +103,6 @@ public class ObjectAdapter<T> extends UniversalAdapter<T> implements ItemClickab
     }
 
     /**
-     *
      * @param index
      * @param view
      * @param parent
@@ -129,7 +121,6 @@ public class ObjectAdapter<T> extends UniversalAdapter<T> implements ItemClickab
     }
 
     /**
-     *
      * @param index
      * @param item
      * @return
@@ -143,7 +134,6 @@ public class ObjectAdapter<T> extends UniversalAdapter<T> implements ItemClickab
     }
 
     /**
-     *
      * @param index
      * @param cellRenderer
      * @param item
@@ -154,8 +144,7 @@ public class ObjectAdapter<T> extends UniversalAdapter<T> implements ItemClickab
         }
     }
 
-      /**
-     *
+    /**
      * @param index
      * @param view
      * @param item
@@ -167,7 +156,6 @@ public class ObjectAdapter<T> extends UniversalAdapter<T> implements ItemClickab
     }
 
     /**
-     *
      * @param index
      * @param view
      * @param item

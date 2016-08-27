@@ -3,6 +3,7 @@ package com.grasea.grandroid.api;
 import android.content.Context;
 import android.util.Log;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -11,7 +12,10 @@ import java.util.concurrent.TimeUnit;
 
 import graneric.ProxyObject;
 import graneric.annotation.Anno;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -27,6 +31,8 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
 
     private String baseUrl;
     private Object callback;
+    private boolean debug;
+
     protected ConcurrentHashMap<String, Method> callbackMap;
     protected ConcurrentHashMap<String, Method> requestFailMap;
     protected Retrofit retrofit;
@@ -41,6 +47,7 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
         Backend backend = (Backend) getAnnotation(Backend.class);
         this.baseUrl = backend.value();
         this.callback = callback;
+        debug = backend.debug();
         callbackMap = new ConcurrentHashMap<>();
         requestFailMap = new ConcurrentHashMap<>();
         Retrofit.Builder builder = new Retrofit.Builder()
@@ -48,6 +55,11 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
                 .addConverterFactory(GsonConverterFactory.create());
         if (backend.timeout() > 0 || backend.readTimeout() > 0 || backend.writeTimeout() > 0) {
             OkHttpClient.Builder okbuilder = new OkHttpClient.Builder();
+            if (debug) {
+                HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+                httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+                okbuilder.addInterceptor(httpLoggingInterceptor);
+            }
             if (backend.timeout() > 0) {
                 okbuilder.connectTimeout(backend.timeout(), TimeUnit.SECONDS);
             }

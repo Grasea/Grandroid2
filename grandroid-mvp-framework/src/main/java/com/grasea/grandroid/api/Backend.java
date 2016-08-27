@@ -10,6 +10,8 @@ import java.lang.annotation.RetentionPolicy;
 public @interface Backend {
     String value() default "";
 
+    boolean debug() default false;
+
     //Connection Timeout, 0 means using OKHttp Client default value
     int timeout() default 0;
 

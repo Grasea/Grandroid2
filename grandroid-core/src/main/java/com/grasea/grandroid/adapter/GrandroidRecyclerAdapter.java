@@ -4,6 +4,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +23,7 @@ public abstract class GrandroidRecyclerAdapter<T, VH extends RecyclerView.ViewHo
     private SparseBooleanArray selectedItems = new SparseBooleanArray();
 
     public enum ChooseMode {
-        NONE, SINGLE, MULTIPLE
+        NONE, SINGLE, SINGLE_RADIO, MULTIPLE
     }
 
     public ArrayList<T> list;
@@ -126,23 +127,34 @@ public abstract class GrandroidRecyclerAdapter<T, VH extends RecyclerView.ViewHo
     public void toggleSelection(int position) {
         if (chooseMode != ChooseMode.NONE) {
             boolean isSingleChoose = (chooseMode == ChooseMode.SINGLE);
+            boolean isMultipleChoose = (chooseMode == ChooseMode.MULTIPLE);
+
             if (selectedItems.get(position, false)) {
-                selectedItems.delete(position);
-                if (isSingleChoose) {
-                    currentItem = -1;
+                if (ChooseMode.SINGLE_RADIO != chooseMode) {
+                    selectedItems.delete(position);
+                    if (isSingleChoose) {
+                        currentItem = -1;
+                    }
+                } else {
+                    return;
                 }
             } else {
-                if (isSingleChoose) {
+                if (!isMultipleChoose) {
                     selectedItems.clear();
+                    Log.e("grandroid", "將HashSet清空:" + selectedItems.size());
                 }
                 selectedItems.put(position, true);
+                Log.e("grandroid", "選擇:" + position);
             }
-            if (isSingleChoose && currentItem != -1) {
+            if (!isMultipleChoose && currentItem != -1) {
                 notifyItemChanged(currentItem);
+                Log.e("grandroid", "Notify變更:" + currentItem + ", " + selectedItems.get(currentItem, false));
             }
             notifyItemChanged(position);
-            if (isSingleChoose) {
+            Log.e("grandroid", "Notify變更:" + position + ", " + selectedItems.get(position, false));
+            if (!isMultipleChoose) {
                 currentItem = position;
+                Log.e("grandroid", "目前currentItem:" + currentItem);
             }
         }
     }
