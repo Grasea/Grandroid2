@@ -1,4 +1,4 @@
-package com.grasea.grandroid.demo.fragment;
+package com.grasea.grandroid.demo.fragment.tab;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;

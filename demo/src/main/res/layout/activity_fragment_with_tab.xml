@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.grasea.grandroid.demo.fragment.FragmentWithTabActivity">
+    tools:context=".fragment.tab.FragmentWithTabActivity">
     <android.support.design.widget.TabLayout
         android:id="@+id/pager_tabs"
         android:layout_width="match_parent"

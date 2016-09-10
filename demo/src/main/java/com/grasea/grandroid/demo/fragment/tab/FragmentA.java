@@ -1,4 +1,4 @@
-package com.grasea.grandroid.demo.fragment;
+package com.grasea.grandroid.demo.fragment.tab;
 
 /**
  * Copyright (C) 2016 Alan Ding
@@ -16,10 +16,21 @@ package com.grasea.grandroid.demo.fragment;
  * limitations under the License.
  */
 
-import com.grasea.grandroid.mvp.GrandroidPresenter;
+import com.grasea.grandroid.mvp.GrandroidActivity;
+import com.grasea.grandroid.mvp.GrandroidFragment;
+import com.grasea.grandroid.mvp.UsingPresenter;
 
 /**
  * Created by Alan Ding on 2016/6/23.
  */
-public class APresenter extends GrandroidPresenter<FragmentA> {
+@UsingPresenter(APresenter.class)
+public class FragmentA extends GrandroidFragment<APresenter> {
+    @Override
+    public GrandroidActivity.UISettingEvent getUISetting() {
+        return new UISetting();
+    }
+
+    public class UISetting implements GrandroidActivity.UISettingEvent {
+
+    }
 }

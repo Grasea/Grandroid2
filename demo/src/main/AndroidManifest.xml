@@ -15,10 +15,13 @@
         <activity android:name=".mvp.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".ble.BLEDemoActivity" />
         <activity android:name=".database.DatabaseDemoActivity" />
+        <activity android:name=".fragment.normal.DemoFragmentActivity"></activity>
     </application>
+
 </manifest>
