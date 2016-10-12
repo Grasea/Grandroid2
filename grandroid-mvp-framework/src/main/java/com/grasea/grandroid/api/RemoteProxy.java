@@ -37,9 +37,14 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
     protected ConcurrentHashMap<String, Method> requestFailMap;
     protected Retrofit retrofit;
     protected Object retrofitService;
+    protected static CallbackHandler callbackHandler;
 
     public static <T> T reflect(Class<T> interfaceClass, Object callback) {
         return reflect(interfaceClass, new RemoteProxy(interfaceClass, callback));
+    }
+
+    public static void setCallbackHandler(CallbackHandler callbackHandler) {
+        RemoteProxy.callbackHandler = callbackHandler;
     }
 
     protected RemoteProxy(Class subjectInterface, Object callback) {
@@ -53,7 +58,7 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create());
-        if (backend.timeout() > 0 || backend.readTimeout() > 0 || backend.writeTimeout() > 0) {
+        if (backend.timeout() > 0 || backend.readTimeout() > 0 || backend.writeTimeout() > 0 || debug) {
             OkHttpClient.Builder okbuilder = new OkHttpClient.Builder();
             if (debug) {
                 HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
@@ -112,31 +117,35 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
         final Method callbackMethod = getCallbackMethod(m.getName());
         if (callbackMethod != null) {
             call.enqueue(new retrofit2.Callback() {
-                @Override
-                public void onResponse(Call call, Response response) {
-                    try {
-                        callbackMethod.invoke(callback, response.body());
-                    } catch (IllegalAccessException e) {
-                        Log.e("grandroid", null, e);
-                    } catch (InvocationTargetException e) {
-                        Log.e("grandroid", null, e);
-                    }
-                }
+                             @Override
+                             public void onResponse(Call call, Response response) {
+                                 try {
+                                     callbackMethod.invoke(callback, response.body());
+                                 } catch (Exception e) {
+                                     if (e instanceof InvocationTargetException) {
+                                         Log.e("grandroid", null, ((InvocationTargetException) e).getTargetException());
+                                     } else {
+                                         Log.e("grandroid", null, e);
+                                     }
+                                 }
+                             }
 
-                @Override
-                public void onFailure(Call call, Throwable t) {
-                    Method requestFailMethod = getRequestFailMethod(m.getName());
-                    if (requestFailMethod != null) {
-                        try {
-                            requestFailMethod.invoke(callback, m.getName(), t);
-                        } catch (IllegalAccessException e) {
-                            Log.e("grandroid", null, e);
-                        } catch (InvocationTargetException e) {
-                            Log.e("grandroid", null, e);
-                        }
-                    }
-                }
-            });
+                             @Override
+                             public void onFailure(Call call, Throwable t) {
+                                 Method requestFailMethod = getRequestFailMethod(m.getName());
+                                 if (requestFailMethod != null) {
+                                     try {
+                                         requestFailMethod.invoke(callback, m.getName(), t);
+                                     } catch (IllegalAccessException e) {
+                                         Log.e("grandroid", null, e);
+                                     } catch (InvocationTargetException e) {
+                                         Log.e("grandroid", null, e);
+                                     }
+                                 }
+                             }
+                         }
+
+            );
         }
         return call;
     }
