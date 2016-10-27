@@ -33,6 +33,22 @@ public abstract class GrandroidRecyclerAdapter<T, VH extends RecyclerView.ViewHo
     private ChooseMode chooseMode = ChooseMode.NONE;
     private int currentItem = -1;
 
+    @Deprecated
+    /**
+     * Use GrandroidRecyclerAdapter(ArrayList,RecyclerItemConfig).
+     */
+    public GrandroidRecyclerAdapter(ArrayList<T> list, Class recyclerItemConfigClass) {
+        this.list = list;
+        try {
+            this.recyclerItemConfig = (RecyclerItemConfig<VH>) recyclerItemConfigClass.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        itemIds = recyclerItemConfig.itemIds;
+        vhClass = recyclerItemConfig.vhClass;
+    }
 
     public GrandroidRecyclerAdapter(ArrayList<T> list, RecyclerItemConfig recyclerItemConfig) {
         this.list = list;
@@ -180,5 +196,8 @@ public abstract class GrandroidRecyclerAdapter<T, VH extends RecyclerView.ViewHo
         return items;
     }
 
+    public RecyclerItemConfig<VH> getRecyclerItemConfig() {
+        return recyclerItemConfig;
+    }
 }
 

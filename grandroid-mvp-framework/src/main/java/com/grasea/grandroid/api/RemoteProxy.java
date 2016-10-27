@@ -17,6 +17,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
+import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -37,14 +38,10 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
     protected ConcurrentHashMap<String, Method> requestFailMap;
     protected Retrofit retrofit;
     protected Object retrofitService;
-    protected static CallbackHandler callbackHandler;
+    protected static ArrayList<Converter.Factory> factoryArrayList = new ArrayList<>();
 
     public static <T> T reflect(Class<T> interfaceClass, Object callback) {
         return reflect(interfaceClass, new RemoteProxy(interfaceClass, callback));
-    }
-
-    public static void setCallbackHandler(CallbackHandler callbackHandler) {
-        RemoteProxy.callbackHandler = callbackHandler;
     }
 
     protected RemoteProxy(Class subjectInterface, Object callback) {
@@ -56,8 +53,13 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
         callbackMap = new ConcurrentHashMap<>();
         requestFailMap = new ConcurrentHashMap<>();
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create());
+                .baseUrl(baseUrl);
+        if (RemoteProxy.factoryArrayList != null) {
+            for (Converter.Factory factory : RemoteProxy.factoryArrayList) {
+                builder.addConverterFactory(factory);
+            }
+        }
+        builder.addConverterFactory(GsonConverterFactory.create());
         if (backend.timeout() > 0 || backend.readTimeout() > 0 || backend.writeTimeout() > 0 || debug) {
             OkHttpClient.Builder okbuilder = new OkHttpClient.Builder();
             if (debug) {
@@ -86,6 +88,10 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
         for (Method m : methods) {
             requestFailMap.put(m.getAnnotation(RequestFail.class).value(), m);
         }
+    }
+
+    public static void addConverterFactory(Converter.Factory factory) {
+        RemoteProxy.factoryArrayList.add(factory);
     }
 
     public String getBaseUrl() {
