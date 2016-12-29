@@ -149,7 +149,37 @@ public class ModelProxy extends ProxyObject<ModelProxy> {
                 if (objectMap.containsKey(key)) {
                     return objectMap.get(key);
                 } else {
-                    return null;
+                    return new ObjectTypeHandler(m.getReturnType()) {
+                        @Override
+                        protected Object onBoolean(Boolean value) {
+                            return ((Get) ann).defaultValue().getBooleanValue();
+                        }
+
+                        @Override
+                        protected Object onString(String value) {
+                            return ((Get) ann).defaultValue().getStringValue();
+                        }
+
+                        @Override
+                        protected Object onInt(Integer value) {
+                            return ((Get) ann).defaultValue().getIntValue();
+                        }
+
+                        @Override
+                        protected Object onDouble(Double value) {
+                            return ((Get) ann).defaultValue().getDoubleValue();
+                        }
+
+                        @Override
+                        protected Object onFloat(Float value) {
+                            return ((Get) ann).defaultValue().getFloatValue();
+                        }
+
+                        @Override
+                        protected Object onLong(Long value) {
+                            return ((Get) ann).defaultValue().getLongValue();
+                        }
+                    }.process();
                 }
             case Preferences:
                 final SharedPreferences sp = context.getSharedPreferences("default", Context.MODE_PRIVATE);

@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
-version = "1.0.8-beta11"
+version = "1.0.8-beta18"
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
@@ -28,7 +28,7 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:+'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
-    debugCompile project(path: ':grandroid-core')
+    compile project(path: ':grandroid-core')
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.grasea:grandroid-actions:1.0.0'
     compile project(path: ':grandroid-database')

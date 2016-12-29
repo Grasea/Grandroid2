@@ -1,9 +1,6 @@
 package com.grasea.grandroid.adapter;
 
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -19,17 +16,20 @@ import java.util.List;
  * Created by Alan Ding on 2016/5/27.
  */
 public abstract class GrandroidRecyclerAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> implements MultipleSelector, OnClickable<T, VH> {
-
-    private SparseBooleanArray selectedItems = new SparseBooleanArray();
-
     public enum ChooseMode {
         NONE, SINGLE, SINGLE_RADIO, MULTIPLE
     }
-
+    public static final int TYPE_FOOTER = 2;
+    public static final int TYPE_HEADER = 1;
+    public static final int TYPE_ITEM = 0;
     public ArrayList<T> list;
+    private SparseBooleanArray selectedItems = new SparseBooleanArray();
     private int itemIds = 0;
     private Class<VH> vhClass;
     private RecyclerItemConfig<VH> recyclerItemConfig;
+    private RecyclerItemConfig<VH> headerItemConfig;
+    private RecyclerItemConfig<VH> footerItemConfig;
+
     private ChooseMode chooseMode = ChooseMode.NONE;
     private int currentItem = -1;
 
@@ -58,27 +58,36 @@ public abstract class GrandroidRecyclerAdapter<T, VH extends RecyclerView.ViewHo
     }
 
     @Override
-    public abstract void onItemClick(VH holder, int index, T item);
+    public void clearSelections() {
+        selectedItems.clear();
+        notifyDataSetChanged();
+    }
 
-    @Override
-    public VH onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        try {
-            return vhClass.getDeclaredConstructor(View.class).newInstance(LayoutInflater.from(parent.getContext()).inflate(itemIds, parent, false));
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
+    public RecyclerItemConfig createFooterRecyclerItemConfig(ViewGroup parent, int viewType) {
         return null;
+    }
+
+    public RecyclerItemConfig createHeaderRecyclerItemConfig(ViewGroup parent, int viewType) {
+        return null;
+    }
+
+    public abstract void fillItem(VH holder, int position, T data);
+
+    public RecyclerItemConfig<VH> getFooterItemConfig() {
+        return footerItemConfig;
+    }
+
+    public RecyclerItemConfig<VH> getHeaderItemConfig() {
+        return headerItemConfig;
     }
 
     public T getItem(int position) {
         return list.get(position);
+    }
+
+    @Override
+    public int getItemCount() {
+        return list.size();
     }
 
     public ArrayList<T> getList() {
@@ -89,11 +98,59 @@ public abstract class GrandroidRecyclerAdapter<T, VH extends RecyclerView.ViewHo
         setList(list, false);
     }
 
-    public void setList(ArrayList<T> list, boolean withoutNotify) {
-        this.list = list;
-        if (!withoutNotify) {
-            notifyDataSetChanged();
+    public RecyclerItemConfig<VH> getRecyclerItemConfig() {
+        return recyclerItemConfig;
+    }
+
+    @Override
+    public int getSelectedItemCount() {
+        return selectedItems.size();
+    }
+
+    @Override
+    public List<Integer> getSelectedItems() {
+        List<Integer> items =
+                new ArrayList<Integer>(selectedItems.size());
+        for (int i = 0; i < selectedItems.size(); i++) {
+            items.add(selectedItems.keyAt(i));
         }
+        return items;
+    }
+
+    public VH getViewHolder(ViewGroup parent, int viewType) {
+
+        try {
+            switch (viewType) {
+                case TYPE_ITEM: {
+                    VH vh = vhClass.getDeclaredConstructor(View.class).newInstance(LayoutInflater.from(parent.getContext()).inflate(itemIds, parent, false));
+                    return vh;
+                }
+                case TYPE_HEADER: {
+                    RecyclerItemConfig headerRecyclerItemConfig = createHeaderRecyclerItemConfig(parent, viewType);
+                    headerItemConfig = headerRecyclerItemConfig;
+                    Class<VH> vhClass = headerRecyclerItemConfig.vhClass;
+                    int itemIds = headerRecyclerItemConfig.itemIds;
+                    return vhClass.getDeclaredConstructor(View.class).newInstance(LayoutInflater.from(parent.getContext()).inflate(itemIds, parent, false));
+                }
+                case TYPE_FOOTER: {
+                    RecyclerItemConfig footerRecyclerItemConfig = createFooterRecyclerItemConfig(parent, viewType);
+                    footerItemConfig = footerRecyclerItemConfig;
+                    Class<VH> vhClass = footerRecyclerItemConfig.vhClass;
+                    int itemIds = footerRecyclerItemConfig.itemIds;
+                    return vhClass.getDeclaredConstructor(View.class).newInstance(LayoutInflater.from(parent.getContext()).inflate(itemIds, parent, false));
+                }
+            }
+
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -115,23 +172,32 @@ public abstract class GrandroidRecyclerAdapter<T, VH extends RecyclerView.ViewHo
     }
 
     @Override
-    public void onViewDetachedFromWindow(final RecyclerView.ViewHolder holder) {
-        holder.itemView.clearAnimation();
+    public VH onCreateViewHolder(ViewGroup parent, int viewType) {
+        VH viewHolder = getViewHolder(parent, viewType);
+        return viewHolder;
     }
 
     public void onItemChoose(VH holder, int position, boolean isChoosed) {
         holder.itemView.setActivated(isChoosed);
     }
 
-    public abstract void fillItem(VH holder, int position, T data);
+    @Override
+    public abstract void onItemClick(VH holder, int index, T item);
 
     @Override
-    public int getItemCount() {
-        return list.size();
+    public void onViewDetachedFromWindow(final RecyclerView.ViewHolder holder) {
+        holder.itemView.clearAnimation();
     }
 
     public void setChooseMode(ChooseMode chooseMode) {
         this.chooseMode = chooseMode;
+    }
+
+    public void setList(ArrayList<T> list, boolean withoutNotify) {
+        this.list = list;
+        if (!withoutNotify) {
+            notifyDataSetChanged();
+        }
     }
 
     /**
@@ -173,31 +239,6 @@ public abstract class GrandroidRecyclerAdapter<T, VH extends RecyclerView.ViewHo
                 Log.e("grandroid", "目前currentItem:" + currentItem);
             }
         }
-    }
-
-    @Override
-    public void clearSelections() {
-        selectedItems.clear();
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public int getSelectedItemCount() {
-        return selectedItems.size();
-    }
-
-    @Override
-    public List<Integer> getSelectedItems() {
-        List<Integer> items =
-                new ArrayList<Integer>(selectedItems.size());
-        for (int i = 0; i < selectedItems.size(); i++) {
-            items.add(selectedItems.keyAt(i));
-        }
-        return items;
-    }
-
-    public RecyclerItemConfig<VH> getRecyclerItemConfig() {
-        return recyclerItemConfig;
     }
 }
 

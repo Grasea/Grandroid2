@@ -6,12 +6,20 @@ import android.util.Log;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import graneric.ProxyObject;
 import graneric.annotation.Anno;
+import okhttp3.CertificatePinner;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -26,6 +34,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by Rovers on 2016/5/7.
  */
 public class RemoteProxy extends ProxyObject<RemoteProxy> {
+    public interface Initializer {
+        void onOkHttpClientInitilize(OkHttpClient.Builder builder);
+
+        void onRetrofitInitilize(Retrofit.Builder builder);
+
+    }
+
     static {
         bindAnnotationHandler(RemoteProxy.class);
     }
@@ -39,10 +54,12 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
     protected Retrofit retrofit;
     protected Object retrofitService;
     protected static ArrayList<Converter.Factory> factoryArrayList = new ArrayList<>();
+    protected static Initializer initializer;
 
     public static <T> T reflect(Class<T> interfaceClass, Object callback) {
         return reflect(interfaceClass, new RemoteProxy(interfaceClass, callback));
     }
+
 
     protected RemoteProxy(Class subjectInterface, Object callback) {
         super(subjectInterface);
@@ -76,7 +93,14 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
             if (backend.writeTimeout() > 0) {
                 okbuilder.writeTimeout(backend.writeTimeout(), TimeUnit.SECONDS);
             }
+            if (initializer != null) {
+                initializer.onOkHttpClientInitilize(okbuilder);
+            }
+
             builder.client(okbuilder.build());
+        }
+        if (initializer != null) {
+            initializer.onRetrofitInitilize(builder);
         }
         retrofit = builder.build();
         retrofitService = retrofit.create(subjectInterface);
@@ -88,6 +112,10 @@ public class RemoteProxy extends ProxyObject<RemoteProxy> {
         for (Method m : methods) {
             requestFailMap.put(m.getAnnotation(RequestFail.class).value(), m);
         }
+    }
+
+    public static void setInitializer(Initializer initializer) {
+        RemoteProxy.initializer = initializer;
     }
 
     public static void addConverterFactory(Converter.Factory factory) {
