@@ -71,6 +71,11 @@ public class BLEDemoActivity extends AppCompatActivity {
         GrandroidBle.enableDebugLog(false);
         GrandroidBle.init(this, new GrandroidConnectionListener() {
             @Override
+            public void onReadRssiValue(int rssiValue) {
+
+            }
+
+            @Override
             public void onDeviceReady(@Nullable BleDevice controller) {
                 Config.loge("發現並連上裝置:" + controller.getName() + "[" + controller.getAddress() + "]");
                 ArrayList<GattServiceChannelHandler> serviceHandlers = controller.getServiceHandlers();
