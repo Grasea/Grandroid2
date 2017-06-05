@@ -108,6 +108,12 @@ public class Channel implements CharacteristicHandler {
     }
 
     @Override
+    public boolean readRssi() {
+        BluetoothLeService bluetoothLeService = controller.getBluetoothLeService();
+        return bluetoothLeService.readRemoteRssi(controller);
+    }
+
+    @Override
     public String toString() {
         return "Channel{" +
                 "uuid='" + uuid + '\'' +
