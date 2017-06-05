@@ -29,7 +29,9 @@ public class BleDevice extends BaseBleDevice {
         init();
     }
 
-    public @Nullable GattServiceChannelHandler findService(String serviceUUID) {
+    public
+    @Nullable
+    GattServiceChannelHandler findService(String serviceUUID) {
         return serviceHandlerMap.get(serviceUUID);
     }
 
@@ -43,11 +45,16 @@ public class BleDevice extends BaseBleDevice {
         serviceHandlerMap.clear();
         Config.logd("on GattServicesDiscovered");
         List<BluetoothGattService> supportedGattServices = bluetoothLeService.getSupportedGattServices(this);
-        for (BluetoothGattService service : supportedGattServices) {
-            Config.logi("Add a Service:" + service.getUuid().toString());
-            serviceHandlerMap.put(service.getUuid().toString(), new GattServiceChannelHandler(this, service));
+        if (supportedGattServices != null) {
+            for (BluetoothGattService service : supportedGattServices) {
+                Config.logi("Add a Service:" + service.getUuid().toString());
+                serviceHandlerMap.put(service.getUuid().toString(), new GattServiceChannelHandler(this, service));
+            }
+            state = ConnectionState.Connecting;
+        }else{
+
         }
-        state = ConnectionState.Connecting;
+
     }
 
     @Override
