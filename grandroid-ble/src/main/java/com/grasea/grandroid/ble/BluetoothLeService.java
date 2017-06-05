@@ -212,6 +212,10 @@ public class BluetoothLeService extends Service {
         return true;
     }
 
+    public boolean connect(final BaseBleDevice controller) {
+        return connect(controller, 0, false);
+    }
+
     /**
      * Connects to the GATT server hosted on the Bluetooth LE device.
      *
@@ -221,7 +225,7 @@ public class BluetoothLeService extends Service {
      * {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
      * callback.
      */
-    public boolean connect(final BaseBleDevice controller) {
+    public boolean connect(final BaseBleDevice controller, final int delay, final boolean autoConnect) {
         if (mBluetoothAdapter == null || controller.getAddress() == null) {
             Log.w(TAG, "BluetoothAdapter not initialized or unspecified address.");
             return false;
@@ -244,14 +248,13 @@ public class BluetoothLeService extends Service {
         }
         // We want to directly connect to the device, so we are setting the autoConnect
         // parameter to false.
-        Config.loge("sleep 500 ms");
         handler.post(new Runnable() {
             @Override
             public void run() {
                 new Timer().schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        BluetoothGatt bluetoothGatt = device.connectGatt(BluetoothLeService.this, false, mGattCallback);
+                        BluetoothGatt bluetoothGatt = device.connectGatt(BluetoothLeService.this, autoConnect, mGattCallback);
                         if (bluetoothGatt != null) {
                             bluetoothGatt.connect();
                         }
@@ -259,7 +262,7 @@ public class BluetoothLeService extends Service {
                         Log.d(TAG, "Trying to create a new connection.");
                         mConnectionState = STATE_CONNECTING;
                     }
-                }, 500);
+                }, delay);
 
             }
         });
@@ -374,6 +377,7 @@ public class BluetoothLeService extends Service {
 //        //check mBluetoothGatt is available
         if (bluetoothGatt == null) {
             Log.e(TAG, "lost connection");
+
             return false;
         }
 //        BluetoothGattService Service = mBluetoothGatt.getService(your Services);
