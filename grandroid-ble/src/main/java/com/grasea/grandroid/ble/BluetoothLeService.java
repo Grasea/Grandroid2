@@ -208,7 +208,9 @@ public class BluetoothLeService extends Service {
             Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
             return false;
         }
-        gattsMap = new HashMap<>();
+        if (gattsMap == null) {
+            gattsMap = new HashMap<>();
+        }
         return true;
     }
 
