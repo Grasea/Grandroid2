@@ -69,9 +69,12 @@ public class BluetoothLeService extends Service {
             "com.grasea.grandroid.ble.ACTION_GATT_SERVICES_DISCOVERED";
     public final static String ACTION_DATA_AVAILABLE =
             "com.grasea.grandroid.ble.ACTION_DATA_AVAILABLE";
+    public final static String ACTION_READ_RSSI =
+            "com.grasea.grandroid.ble.ACTION_READ_RSSI";
     public final static String EXTRA_DATA =
             "com.grasea.grandroid.ble.EXTRA_DATA";
     public final static String EXTRA_DEVICE_ADDRESS = "address";
+    public final static String EXTRA_DEVICE_RSSI = "rssi";
     public final static String EXTRA_SERVICE_UUID = "serviceUUID";
     public final static String EXTRA_CHANNEL_UUID = "characteristicUUID";
 
@@ -138,12 +141,30 @@ public class BluetoothLeService extends Service {
             Config.logi("[" + gatt.getDevice().getAddress() + "]onCharacteristicChanged");
             broadcastUpdate(ACTION_DATA_AVAILABLE, gatt.getDevice().getAddress(), characteristic);
         }
+
+        @Override
+        public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
+            super.onReadRemoteRssi(gatt, rssi, status);
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                Config.logi(String.format("BluetoothGatt ReadRssi[%d]", rssi));
+                broadcastUpdate(ACTION_READ_RSSI, rssi);
+            }
+        }
     };
 
     private void broadcastUpdate(final String action, String deviceAddress) {
         final Intent intent = new Intent(action);
         Bundle bundle = new Bundle();
         bundle.putString(EXTRA_DEVICE_ADDRESS, deviceAddress);
+        intent.putExtra(EXTRA_DATA, bundle);
+        sendBroadcast(intent);
+    }
+
+
+    private void broadcastUpdate(final String action, int rssi) {
+        final Intent intent = new Intent(action);
+        Bundle bundle = new Bundle();
+        bundle.putInt(EXTRA_DEVICE_RSSI, rssi);
         intent.putExtra(EXTRA_DATA, bundle);
         sendBroadcast(intent);
     }
@@ -399,6 +420,15 @@ public class BluetoothLeService extends Service {
 //        gattCharacteristic.setValue(value);
         boolean status = bluetoothGatt.writeCharacteristic(gattCharacteristic);
         return status;
+    }
+
+    public synchronized boolean readRemoteRssi(BaseBleDevice controller) {
+        BluetoothGatt bluetoothGatt = findBluetoothGatt(controller);
+        if (bluetoothGatt == null) {
+            Log.e(TAG, "gatt not found");
+            return false;
+        }
+        return bluetoothGatt.readRemoteRssi();
     }
 
     public int getConnectionState() {

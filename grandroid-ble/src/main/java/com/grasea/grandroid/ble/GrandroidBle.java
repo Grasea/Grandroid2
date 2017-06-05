@@ -151,6 +151,8 @@ public class GrandroidBle {
         void onBluetoothLeServiceDisconnect();
 
         void onBluetoothLeServiceConnected();
+
+        void onReadRssiValue(int rssiValue);
     }
 
     private static class InitHelper {
@@ -255,6 +257,11 @@ public class GrandroidBle {
                     MethodBinder binder = MethodBinder.getBinder(address);
                     if (binder != null) {
                         binder.onBLEDataReceive(serviceUUID, channelUUID, data);
+                    }
+                } else if (BluetoothLeService.ACTION_READ_RSSI.equals(action)) {
+                    int rssi = extra.getInt(BluetoothLeService.EXTRA_DEVICE_RSSI, 0);
+                    if (connectionListener != null) {
+                        connectionListener.onReadRssiValue(rssi);
                     }
                 } else {
                     Config.loge("UNKNOW ACTION:" + action);
