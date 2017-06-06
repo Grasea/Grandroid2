@@ -184,6 +184,7 @@ public class GrandroidBle {
             intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
             intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
             intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
+            intentFilter.addAction(BluetoothLeService.ACTION_READ_RSSI);
             context.registerReceiver(mGattUpdateReceiver, intentFilter);
             return true;
         }
