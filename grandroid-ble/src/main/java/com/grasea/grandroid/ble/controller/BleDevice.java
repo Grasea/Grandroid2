@@ -51,7 +51,7 @@ public class BleDevice extends BaseBleDevice {
                 serviceHandlerMap.put(service.getUuid().toString(), new GattServiceChannelHandler(this, service));
             }
             state = ConnectionState.Connecting;
-        }else{
+        } else {
 
         }
 
@@ -80,6 +80,14 @@ public class BleDevice extends BaseBleDevice {
     public boolean connect() {
         if (bluetoothLeService != null) {
             bluetoothLeService.connect(this);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean connect(int delay, boolean autoConnect) {
+        if (bluetoothLeService != null) {
+            bluetoothLeService.connect(this, delay, autoConnect);
             return true;
         }
         return false;

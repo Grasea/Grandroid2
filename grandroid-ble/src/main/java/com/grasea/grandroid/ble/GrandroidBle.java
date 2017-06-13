@@ -250,6 +250,8 @@ public class GrandroidBle {
                                 break;
                             }
                         }
+                    }else{
+
                     }
                 } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                     String serviceUUID = extra.getString(BluetoothLeService.EXTRA_SERVICE_UUID, "");
