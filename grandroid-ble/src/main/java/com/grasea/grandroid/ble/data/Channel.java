@@ -93,11 +93,18 @@ public class Channel implements CharacteristicHandler {
 
     @Override
     public boolean send(byte[] protocol) {
-//        try {
-//            Thread.sleep(300);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        return send(protocol, 300);
+    }
+
+    @Override
+    public boolean send(byte[] protocol, int delay) {
+        if (delay > 0) {
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         BluetoothLeService bluetoothLeService = controller.getBluetoothLeService();
         BluetoothGattCharacteristic gattCharacteristic = getGattCharacteristic();
         bluetoothLeService.setCharacteristicNotification(controller,

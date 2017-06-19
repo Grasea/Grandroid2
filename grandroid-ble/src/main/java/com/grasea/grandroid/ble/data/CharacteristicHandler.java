@@ -25,6 +25,8 @@ public interface CharacteristicHandler {
 
     boolean send(byte[] protocol);
 
+    boolean send(byte[] protocol, int delay);
+
     boolean readRssi();
 
 }

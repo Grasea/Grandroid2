@@ -71,10 +71,13 @@ public class BluetoothLeService extends Service {
             "com.grasea.grandroid.ble.ACTION_DATA_AVAILABLE";
     public final static String ACTION_READ_RSSI =
             "com.grasea.grandroid.ble.ACTION_READ_RSSI";
+    public final static String ACTION_CHARACTERISTIV_WRITE =
+            "com.grasea.grandroid.ble.ACTION_CHARACTERISTIV_WRITE";
     public final static String EXTRA_DATA =
             "com.grasea.grandroid.ble.EXTRA_DATA";
     public final static String EXTRA_DEVICE_ADDRESS = "address";
     public final static String EXTRA_DEVICE_RSSI = "rssi";
+    public final static String EXTRA_DEVICE_STATUS = "status";
     public final static String EXTRA_SERVICE_UUID = "serviceUUID";
     public final static String EXTRA_CHANNEL_UUID = "characteristicUUID";
 
@@ -90,6 +93,7 @@ public class BluetoothLeService extends Service {
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             Config.loge("[" + characteristic.getUuid().toString() + "] onCharacteristicWrite_ status:" + status);
+            broadcastUpdateCharacteristicWrite(ACTION_CHARACTERISTIV_WRITE, status);
             super.onCharacteristicWrite(gatt, characteristic, status);
         }
 
@@ -165,6 +169,14 @@ public class BluetoothLeService extends Service {
         final Intent intent = new Intent(action);
         Bundle bundle = new Bundle();
         bundle.putInt(EXTRA_DEVICE_RSSI, rssi);
+        intent.putExtra(EXTRA_DATA, bundle);
+        sendBroadcast(intent);
+    }
+
+    private void broadcastUpdateCharacteristicWrite(final String action, int status) {
+        final Intent intent = new Intent(action);
+        Bundle bundle = new Bundle();
+        bundle.putInt(EXTRA_DEVICE_STATUS, status);
         intent.putExtra(EXTRA_DATA, bundle);
         sendBroadcast(intent);
     }

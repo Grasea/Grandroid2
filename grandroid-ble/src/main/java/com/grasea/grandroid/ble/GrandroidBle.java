@@ -153,6 +153,8 @@ public class GrandroidBle {
         void onBluetoothLeServiceConnected();
 
         void onReadRssiValue(int rssiValue);
+
+        void onCharacteristicWrite(int status);
     }
 
     private static class InitHelper {
@@ -185,6 +187,7 @@ public class GrandroidBle {
             intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
             intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
             intentFilter.addAction(BluetoothLeService.ACTION_READ_RSSI);
+            intentFilter.addAction(BluetoothLeService.ACTION_CHARACTERISTIV_WRITE);
             context.registerReceiver(mGattUpdateReceiver, intentFilter);
             return true;
         }
@@ -250,7 +253,7 @@ public class GrandroidBle {
                                 break;
                             }
                         }
-                    }else{
+                    } else {
 
                     }
                 } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
@@ -265,6 +268,11 @@ public class GrandroidBle {
                     int rssi = extra.getInt(BluetoothLeService.EXTRA_DEVICE_RSSI, 0);
                     if (connectionListener != null) {
                         connectionListener.onReadRssiValue(rssi);
+                    }
+                } else if (BluetoothLeService.ACTION_CHARACTERISTIV_WRITE.equals(action)) {
+                    int status = extra.getInt(BluetoothLeService.EXTRA_DEVICE_STATUS, 0);
+                    if (connectionListener != null) {
+                        connectionListener.onCharacteristicWrite(status);
                     }
                 } else {
                     Config.loge("UNKNOW ACTION:" + action);

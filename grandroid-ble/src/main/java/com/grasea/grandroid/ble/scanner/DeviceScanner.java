@@ -133,11 +133,15 @@ public class DeviceScanner extends BaseScanner {
                     if (uuids.isEmpty()) {
                         //Defult scan.
                         Config.logi("names length:" + names.size() + ", device is null?" + (device == null) + ", deviceName:" + device.getName());
-                        for (String name : names) {
-                            if (device.getName() != null && name.contains(device.getName())) {
-                                onDeviceFind(device, rssi, scanRecord);
-                                break;
+                        if (names != null && !names.isEmpty()) {
+                            for (String name : names) {
+                                if (device.getName() != null && name.contains(device.getName())) {
+                                    onDeviceFind(device, rssi, scanRecord);
+                                    break;
+                                }
                             }
+                        }else{
+                            onDeviceFind(device, rssi, scanRecord);
                         }
                     } else {
                         //Scan by UUIDs.
@@ -163,11 +167,15 @@ public class DeviceScanner extends BaseScanner {
                         }
                         //Defult scan.
                         Config.logi("names length:" + names.size() + ", device is null?" + (device == null) + ", deviceName:" + device.getName());
-                        for (String name : names) {
-                            if (device.getName() != null && name.contains(device.getName())) {
-                                onDeviceFind(device, rssi, scanRecord);
-                                break;
+                        if (names != null && !names.isEmpty()) {
+                            for (String name : names) {
+                                if (device.getName() != null && name.contains(device.getName())) {
+                                    onDeviceFind(device, rssi, scanRecord);
+                                    break;
+                                }
                             }
+                        }else{
+                            onDeviceFind(device, rssi, scanRecord);
                         }
 
                     }
@@ -293,7 +301,7 @@ public class DeviceScanner extends BaseScanner {
                     return;
                 } else {
                     long time = System.currentTimeMillis() - startTime;
-                    Config.logi("pass time:" + time);
+//                    Config.logi("pass time:" + time);
                     if (System.currentTimeMillis() - startTime >= getTimeout()) {
                         timeCount++;
 
