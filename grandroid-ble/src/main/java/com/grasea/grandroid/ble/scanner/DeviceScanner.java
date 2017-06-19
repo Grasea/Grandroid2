@@ -248,7 +248,7 @@ public class DeviceScanner extends BaseScanner {
 
     @Override
     public void onDeviceFind(BluetoothDevice device, int rssi, byte[] scanRecord) {
-        GrandroidBle.getInstance().addDevice(device);
+//        GrandroidBle.getInstance().addDevice(device);
         if (scanResultHandler != null) {
             scanResultHandler.onDeviceFind(device, rssi, scanRecord);
         }

@@ -76,6 +76,11 @@ public class BLEDemoActivity extends AppCompatActivity {
             }
 
             @Override
+            public void onCharacteristicWrite(int status) {
+
+            }
+
+            @Override
             public void onDeviceReady(@Nullable BleDevice controller) {
                 Config.loge("發現並連上裝置:" + controller.getName() + "[" + controller.getAddress() + "]");
                 ArrayList<GattServiceChannelHandler> serviceHandlers = controller.getServiceHandlers();
