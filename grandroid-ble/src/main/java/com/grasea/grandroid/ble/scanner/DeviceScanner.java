@@ -140,7 +140,7 @@ public class DeviceScanner extends BaseScanner {
                                     break;
                                 }
                             }
-                        }else{
+                        } else {
                             onDeviceFind(device, rssi, scanRecord);
                         }
                     } else {
@@ -174,7 +174,7 @@ public class DeviceScanner extends BaseScanner {
                                     break;
                                 }
                             }
-                        }else{
+                        } else {
                             onDeviceFind(device, rssi, scanRecord);
                         }
 
@@ -238,7 +238,9 @@ public class DeviceScanner extends BaseScanner {
     public void stopScan() {
         if (isScanning() && bluetoothAdapter != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                bluetoothAdapter.getBluetoothLeScanner().stopScan(scanCallback);
+                if (scanCallback != null) {
+                    bluetoothAdapter.getBluetoothLeScanner().stopScan(scanCallback);
+                }
             } else {
                 bluetoothAdapter.stopLeScan(leScanCallback);
             }
