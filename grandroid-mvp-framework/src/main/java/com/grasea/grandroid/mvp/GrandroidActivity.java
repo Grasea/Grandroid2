@@ -63,6 +63,11 @@ public abstract class GrandroidActivity<P extends GrandroidPresenter> extends Ap
         presenter.setContract(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        presenter.setContract(null);
+        super.onDestroy();
+    }
 
     public P getPresenter() {
         return (P) presenter;
