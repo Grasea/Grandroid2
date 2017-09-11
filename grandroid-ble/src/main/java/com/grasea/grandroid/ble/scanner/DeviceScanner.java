@@ -239,10 +239,18 @@ public class DeviceScanner extends BaseScanner {
         if (isScanning() && bluetoothAdapter != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 if (scanCallback != null) {
-                    bluetoothAdapter.getBluetoothLeScanner().stopScan(scanCallback);
+                    try {
+                        bluetoothAdapter.getBluetoothLeScanner().stopScan(scanCallback);
+                    } catch (Exception e) {
+                        Config.loge(e);
+                    }
                 }
             } else {
-                bluetoothAdapter.stopLeScan(leScanCallback);
+                try {
+                    bluetoothAdapter.stopLeScan(leScanCallback);
+                } catch (Exception e) {
+                    Config.loge(e);
+                }
             }
             stopTimer();
         }
@@ -282,13 +290,20 @@ public class DeviceScanner extends BaseScanner {
         Config.logi("Timer turn on");
         scanning = true;
         timer = new Timer("ScannerTimer");
-        timer.schedule(createTimerTask(), 0, 1000);
+        try {
+            timer.schedule(createTimerTask(), 0, 1000);
+        } catch (Exception e) {
+            Config.loge(e);
+        }
+
     }
 
     private void stopTimer() {
         Config.logi("Timer turn off");
         scanning = false;
-        timer.cancel();
+        if (timer != null) {
+            timer.cancel();
+        }
     }
 
     private TimerTask createTimerTask() {
