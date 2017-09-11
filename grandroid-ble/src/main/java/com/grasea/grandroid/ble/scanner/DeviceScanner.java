@@ -329,7 +329,8 @@ public class DeviceScanner extends BaseScanner {
                             startTime = 0;
                             return;
                         } else {
-                            stopScan();
+                            //似乎有問題，先移除
+//                            stopScan();
                         }
                     }
                 }
