@@ -122,6 +122,10 @@ public class DeviceScanner extends BaseScanner {
         return scanning;
     }
 
+    public void setIsScanning(boolean scanning) {
+        this.scanning = scanning;
+    }
+
     @Override
     public void startScan() {
         Config.logi("start to Scan:" + isScanning() + ", bluetoothAdapter ready?" + (bluetoothAdapter != null));
@@ -337,5 +341,6 @@ public class DeviceScanner extends BaseScanner {
             }
         };
     }
+
 
 }
