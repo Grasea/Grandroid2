@@ -39,9 +39,17 @@ public class ModelProxy extends ProxyObject<ModelProxy> {
         super(subjectInterface);
     }
 
+    public static void clearMemoryData() {
+        objectMap.clear();
+    }
+
     @Put()
     public static boolean put(ModelProxy instance, final Annotation ann, Method m, Object[] args) {
         if (args.length > 0) {
+            if (args[0] == null) {
+                objectMap.remove(((Put) ann).value());
+                return false;
+            }
             switch (((Put) ann).storage()) {
                 case Memory:
                     return new ObjectTypeHandler<Boolean>(args[0]) {
