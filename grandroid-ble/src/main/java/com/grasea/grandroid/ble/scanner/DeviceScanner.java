@@ -37,6 +37,8 @@ public class DeviceScanner extends BaseScanner {
     private ScanResultHandler scanResultHandler;
     private boolean scanTaskDone = false;
     private int scanMode = ScanSettings.SCAN_MODE_BALANCED;
+    private ScanSettings customizeScanSettings;
+    private long reportTime = 0;
 
     public DeviceScanner() {
         uuids = new ArrayList<>();
@@ -203,17 +205,19 @@ public class DeviceScanner extends BaseScanner {
                         onDeviceFailed(errorCode);
                     }
                 };
+                if (customizeScanSettings == null) {
+                    customizeScanSettings = new ScanSettings.Builder().setScanMode(scanMode).setReportDelay(reportTime).build();
+                }
                 if (uuids.isEmpty()) {
                     if (names.isEmpty()) {
-                        bluetoothAdapter.getBluetoothLeScanner().startScan(scanCallback);
+                        bluetoothAdapter.getBluetoothLeScanner().startScan(null, customizeScanSettings, scanCallback);
                         Config.logi("[StartScan]");
                     } else {
                         ArrayList<ScanFilter> scanFilters = new ArrayList<>();
                         for (String name : names) {
                             scanFilters.add(new ScanFilter.Builder().setDeviceName(name).build());
                         }
-                        ScanSettings scanSettings = new ScanSettings.Builder().setScanMode(scanMode).setReportDelay(2000).build();
-                        bluetoothAdapter.getBluetoothLeScanner().startScan(scanFilters, scanSettings, scanCallback);
+                        bluetoothAdapter.getBluetoothLeScanner().startScan(scanFilters, customizeScanSettings, scanCallback);
                         Config.logi("[StartScan]Has need watch names");
                         Config.logi(Arrays.toString(names.toArray(new String[]{})));
 
@@ -223,8 +227,7 @@ public class DeviceScanner extends BaseScanner {
                     for (UUID uuid : uuids) {
                         scanFilters.add(new ScanFilter.Builder().setServiceUuid(new ParcelUuid(uuid)).build());
                     }
-                    ScanSettings scanSettings = new ScanSettings.Builder().setScanMode(scanMode).setReportDelay(2000).build();
-                    bluetoothAdapter.getBluetoothLeScanner().startScan(scanFilters, scanSettings, scanCallback);
+                    bluetoothAdapter.getBluetoothLeScanner().startScan(scanFilters, customizeScanSettings, scanCallback);
                     Config.logi("[StartScan]Has need watch uuids");
                 }
             } else {
@@ -288,6 +291,14 @@ public class DeviceScanner extends BaseScanner {
     public DeviceScanner setScanMode(int scanMode) {
         this.scanMode = scanMode;
         return this;
+    }
+
+    public void setCustomizeScanSettings(ScanSettings customizeScanSettings) {
+        this.customizeScanSettings = customizeScanSettings;
+    }
+
+    public ScanSettings getCustomizeScanSettings() {
+        return customizeScanSettings;
     }
 
     private void startTimer() {
